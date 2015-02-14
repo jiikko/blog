@@ -6,7 +6,7 @@ set :use_sudo, false
 
 set :git_shallow_clone, 1 # １つ前のコミットまでとる
 
-set :app_name, 'docs'
+set :app_name, 'blog'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 set :bundle_without, %w{development test mysql sqlite}.join(' ')
 
