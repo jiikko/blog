@@ -51,9 +51,9 @@ end
 
 group :development do
   gem 'dm-sqlite-adapter', '1.2.0'
-  gem 'capistrano', :require => false
-  gem 'capistrano-rvm', github: "capistrano/rvm", :require => false
-  gem 'capistrano-bundler', :require => false
+  gem 'capistrano', require: false
+  gem 'capistrano-rvm', require: false
+  gem 'capistrano-bundler', require: false
 end
 
 group :test do

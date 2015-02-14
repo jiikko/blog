@@ -10,7 +10,8 @@ set :app_name, 'docs'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 set :bundle_without, %w{development test mysql sqlite}.join(' ')
 
-set :rvm_ruby_version, '2.1'
+# set :rvm_ruby_version, '2.1'
+set :rvm_ruby_string, '2.1@lokka'
 
 # set :deploy_to, '/var/www/my_app'
 # set :scm, :git
