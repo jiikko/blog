@@ -27,7 +27,7 @@ module Lokka
     #
     # @return [String] DSN (Data Source Name) is configuration for database.
     def dsn
-      filename = File.exist?("#{Lokka.root}/database.yml") ? 'database.yml' : 'database.default.yml'
+      filename = File.exist?("#{Lokka.root}/database.yml") ? 'database.yml' : 'db/database.yml'
       YAML.load(ERB.new(File.read("#{Lokka.root}/#{filename}")).result(binding))[self.env]['dsn']
     end
 
