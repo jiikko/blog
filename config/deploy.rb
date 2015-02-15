@@ -54,7 +54,7 @@ namespace :deploy do
 
     task :restart do
       on roles(:web), in: :groups, limit: 3, wait: 10 do
-        execute :kill, "-USR2 `cat#{fetch(:unicorn_pid)}`"
+        execute :kill, "-USR2 `cat #{fetch(:unicorn_pid)}`"
       end
     end
   end
