@@ -1,4 +1,4 @@
-set :application, 'lokka'
+set :application, 'blog.jiikko.com'
 set :repo_url, 'git@github.com:jiikko/blog.git'
 
 set :user, 'deployer'
@@ -11,7 +11,7 @@ set :app_name, 'blog'
 set :bundle_without, %w{development test mysql sqlite}.join(' ')
 
 # set :rvm_ruby_version, '2.1'
-set :rvm_ruby_string, '2.1@lokka'
+set :rvm_ruby_version, '2.1.0@lokka'
 
 # set :format, :pretty
 # set :log_level, :debug
@@ -26,7 +26,7 @@ set :rvm_ruby_string, '2.1@lokka'
 
 
 set :unicorn_pid, "#{shared_path}/tmp/pids/unicorn.pid"
-set :unicorn_config, "#{current_path}/config/unicorn.rb"
+set :unicorn_config, "#{current_path}/config/servers/production/unicorn.conf.rb"
 
 namespace :deploy do
   desc 'Restart application'
@@ -45,8 +45,10 @@ namespace :deploy do
 
   namespace :unicorn do
     task :start do
-      within current_path do
-        execute :bundle, :exec, :unicorn, "-c #{fetch(:unicorn_config)} -E #{fetch(:stage)} -D"
+      on roles(:app), in: :sequence, wait: 5 do
+        within current_path do
+          execute :bundle, :exec, :unicorn_rails, "-c #{fetch(:unicorn_config)} -E #{fetch(:stage)} -D"
+        end
       end
     end
 
