@@ -1,5 +1,5 @@
 set :application, 'lokka'
-set :repo_url, 'git@github.com:jiikko/lokka.git'
+set :repo_url, 'git@github.com:jiikko/blog.git'
 
 set :user, 'deployer'
 set :use_sudo, false
@@ -13,9 +13,6 @@ set :bundle_without, %w{development test mysql sqlite}.join(' ')
 # set :rvm_ruby_version, '2.1'
 set :rvm_ruby_string, '2.1@lokka'
 
-# set :deploy_to, '/var/www/my_app'
-# set :scm, :git
-
 # set :format, :pretty
 # set :log_level, :debug
 # set :pty, true
@@ -26,23 +23,35 @@ set :rvm_ruby_string, '2.1@lokka'
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 # set :keep_releases, 5
 
+
+
+set :unicorn_pid, "#{shared_path}/tmp/pids/unicorn.pid"
+set :unicorn_config, "#{current_path}/config/unicorn.rb"
+
 namespace :deploy do
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
-      execute :touch, release_path.join('tmp/restart.txt')
+      invoke 'unicorn:restart'
     end
   end
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
+      # execute :rake, 'cache:clear'
     end
   end
-
   after :finishing, 'deploy:cleanup'
 
+  namespace :unicorn do
+    task :start do
+      within current_path do
+        execute :bundle, :exec, :unicorn, "-c #{fetch(:unicorn_config)} -E #{fetch(:stage)} -D"
+      end
+    end
+
+    task :restart do
+      excute :kill, "-URS2 #{fetch(:unicorn_pid)}"
+    end
+  end
 end

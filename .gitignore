@@ -6,6 +6,7 @@ config.yml
 /.bundle
 /tmp/*.log
 /log/*.log
+/tmp/pids/*.pid
 /*.csv
 /coverage
 .DS_Store

@@ -126,6 +126,7 @@ require 'slim'
 require 'coffee-script'
 require 'builder'
 require 'nokogiri'
+require "pry"
 require 'lokka/database'
 require 'lokka/models/theme'
 require 'lokka/models/user'
