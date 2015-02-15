@@ -8,6 +8,8 @@ pid "#{LOKKA_ROOT}/tmp/pids/unicorn.pid"
 stderr_path "#{LOKKA_ROOT}/log/unicorn.stderr.log"
 stdout_path "#{LOKKA_ROOT}/log/unicorn.stdout.log"
 
+timeout 200
+
 preload_app true
 
 

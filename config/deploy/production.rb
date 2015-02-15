@@ -13,7 +13,7 @@ set :migration_role, 'db'
 
 server "blog.jiikko.com", user: 'deployer', roles: %w{web app db}
 
-set :linked_dirs, %w{log}
+set :linked_dirs, %w{log tmp}
 set :linked_files, %w{db/database.yml}
 
 # Extended Server Syntax

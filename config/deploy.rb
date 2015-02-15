@@ -47,13 +47,15 @@ namespace :deploy do
     task :start do
       on roles(:app), in: :sequence, wait: 5 do
         within current_path do
-          execute :bundle, :exec, :unicorn_rails, "-c #{fetch(:unicorn_config)} -E #{fetch(:stage)} -D"
+          execute :bundle, :exec, :unicorn, "-c #{fetch(:unicorn_config)} -E #{fetch(:stage)} -D"
         end
       end
     end
 
     task :restart do
-      excute :kill, "-URS2 #{fetch(:unicorn_pid)}"
+      on roles(:web), in: :groups, limit: 3, wait: 10 do
+        execute :kill, "-USR2 `cat#{fetch(:unicorn_pid)}`"
+      end
     end
   end
 end
