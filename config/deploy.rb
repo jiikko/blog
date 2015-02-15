@@ -8,7 +8,7 @@ set :git_shallow_clone, 1 # １つ前のコミットまでとる
 
 set :app_name, 'blog'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
-set :bundle_without, %w{development test mysql sqlite}.join(' ')
+set :bundle_without, %w{development test}.join(' ')
 
 # set :rvm_ruby_version, '2.1'
 set :rvm_ruby_version, '2.1.0@lokka'
@@ -55,6 +55,12 @@ namespace :deploy do
     task :restart do
       on roles(:web), in: :groups, limit: 3, wait: 10 do
         execute :kill, "-USR2 `cat #{fetch(:unicorn_pid)}`"
+      end
+    end
+
+    task :stop do
+      on roles(:web), in: :groups, limit: 3, wait: 10 do
+        execute :kill, "-QUIT `cat #{fetch(:unicorn_pid)}`"
       end
     end
   end
