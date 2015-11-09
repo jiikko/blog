@@ -13,7 +13,6 @@ config.yml
 /tags
 /import.rb
 /pkg
-/.rvmrc
 /Lokka.app
 /doc
 /.yardoc
