@@ -66,3 +66,7 @@ ul.tags {
 .clear_fix {
   clear: both;
 }
+
+pre {
+  background-color: #A4A4A4;
+}
