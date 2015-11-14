@@ -11,7 +11,7 @@ set :env, 'production'
 set :branch, "blog.jiikko.com"
 set :migration_role, 'db'
 
-server "blog.jiikko.com", user: 'deployer', roles: %w{web app db}
+server "blog.jiikko.com", user: 'koji', roles: %w{web app db}
 
 set :linked_dirs, %w{log tmp/pids}
 set :linked_files, %w{db/database.yml}

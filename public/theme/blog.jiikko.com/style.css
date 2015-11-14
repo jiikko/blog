@@ -70,3 +70,25 @@ ul.tags {
 pre {
   background-color: #A4A4A4;
 }
+
+#main .section .body pre {
+  margin-bottom: 1.8em;
+  background-color: #222;
+  display: block;
+  padding: 12px;
+  color: #0F0;
+}
+address, caption, cite, code, dfn, em, th, strong, var {
+  font-style:normal;
+  font-weight:normal;
+}
+
+code, kbd, pre, samp, tt {
+  font-family:monospace;
+  line-height:100%;
+}
+
+/* for IE7 */
+*+html code, kbd, pre, samp, tt {
+  font-size:108%;
+}

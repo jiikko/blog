@@ -8,10 +8,9 @@ set :git_shallow_clone, 1 # １つ前のコミットまでとる
 
 set :app_name, 'blog'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
-set :bundle_without, %w{development test}.join(' ')
+set :bundle_without, %w{development test postgresql}.join(' ')
 
-# set :rvm_ruby_version, '2.1'
-set :rvm_ruby_version, '2.1.0@lokka'
+set :rvm_ruby_version, '2.2.3'
 
 # set :format, :pretty
 # set :log_level, :debug
