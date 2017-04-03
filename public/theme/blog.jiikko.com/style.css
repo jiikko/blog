@@ -24,6 +24,11 @@ ul {
   margin: 0px;
 }
 
+ul.info, ul.tags {
+  padding: 0px;
+  list-style-type: none;
+}
+
 a:link { color: #008080; }
 a:visited { color: #008080; }
 
@@ -38,7 +43,10 @@ a:visited { color: #008080; }
 .site_link a:link { color: gray; }
 .site_link a:visited { color: gray; }
 
-
+ul.links {
+  list-style-type: none;
+  padding-left: 10px;
+}
 ul.links li {
   float: left;
   margin-right: 20px;
