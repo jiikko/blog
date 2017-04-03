@@ -21,9 +21,7 @@ div.body {
 }
 
 ul {
-  list-style: none;
   margin: 0px;
-  padding: 0px;
 }
 
 a:link { color: #008080; }
@@ -71,13 +69,21 @@ pre {
   background-color: #A4A4A4;
 }
 
-#main .section .body pre {
+#main .section .body pre code {
   margin-bottom: 1.8em;
   background-color: #222;
   display: block;
   padding: 12px;
   color: #0F0;
 }
+/* one liner */
+.body code {
+  background-color: #222;
+  padding: 2px;
+  margin: 2px;
+  color: #0F0;
+}
+
 address, caption, cite, code, dfn, em, th, strong, var {
   font-style:normal;
   font-weight:normal;
