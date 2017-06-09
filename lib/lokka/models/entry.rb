@@ -48,10 +48,13 @@ class Entry
   end
 
   def tag_collection=(string)
-    reg = RUBY_VERSION >= "1.9.0" ? /[^\p{Word}._]/iu : /[^\w\s._-]/i
-    @tag_list = string.to_s.split(',').map { |name|
-      name.force_encoding(Encoding.default_external).gsub(reg, '').strip
-    }.reject{|x|x.blank?}.uniq.sort
+    reg = /[^\p{Word}._]/iu
+    @tag_list = string.to_s.split(",").map { |name|
+      name.force_encoding(Encoding.default_external).gsub(reg, "").strip
+    }
+    @tag_list = @tag_list.reject(&:blank?).uniq.sort
+
+    update_tags
   end
 
   def fuzzy_slug
@@ -114,6 +117,13 @@ class Entry
     end
   end
 
+  def description
+    src = long_body.tr("\n", "")
+    desc = (src =~ %r!<p[^>]*>(.+?)</p>!i) ? $1 : src[0..50]
+
+    desc.gsub(%r!<[^/]+/>!, " ").gsub(%r!</[^/]+>!, " ").gsub(/<[^>]+>/, "")
+  end
+
   class << self
     def _default_scope
       {:order => :created_at.desc}
@@ -142,20 +152,20 @@ class Entry
       ret = first({:slug => str}.update(query))
       ret.blank? ? first({:id => str}.update(query)) : ret
     end
-  
+
     def search(str)
       all(:title.like => "%#{str}%") |
         all(:body.like => "%#{str}%")
     end
-  
+
     def recent(count = 5)
       all(:draft => false, :limit => count)
     end
-  
+
     def published
       all(:draft => false)
     end
-  
+
     def unpublished
       all(:draft => true)
     end

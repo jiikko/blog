@@ -47,7 +47,7 @@ describe Post do
       describe "a post using #{markup}" do
         let(:post) { Factory(markup) }
         it { post.body.should_not == post.raw_body }
-        it { post.body.should match('<h1') }
+        it { post.body.tr("\n", "").should match(%r$<h1.*>(<a name.+</a><span .+>)*hi!(</span>)*</h1>\s*<p>#{markup} test</p>$) }
       end
     end
 
@@ -85,5 +85,32 @@ describe Post do
   describe '.first' do
     before { build :post }
     it { expect { Post.first }.not_to raise_error }
+  end
+
+  describe "#tag_collection=" do
+    let(:entry) { create(:entry) }
+    before { entry.tag_collection = "foo,bar" }
+    it "should update tags" do
+      expect { entry.save }.to change { entry.tags }
+    end
+  end
+
+  describe "#description" do
+    [:kramdown, :redcloth, :wikicloth].each do |markup|
+      describe "should use converted markup." do
+        let(:post) { Factory(markup) }
+        it { post.description.should == "#{markup} test" }
+      end
+    end
+
+    context "should use the first paragraph." do
+      let(:post) { build :post }
+      it { post.description.should == "Welcome to Lokka!" }
+    end
+
+    describe "body does not have <p> tag." do
+      let(:post) { build :post, :body => "<h1>Hi!</h1>" }
+      it { post.description.should == "Hi! " }
+    end
   end
 end
