@@ -21,9 +21,7 @@ div.body {
 }
 
 ul {
-  list-style: none;
   margin: 0px;
-  padding: 0px;
 }
 
 a:link { color: #008080; }
@@ -81,6 +79,8 @@ pre {
 address, caption, cite, code, dfn, em, th, strong, var {
   font-style:normal;
   font-weight:normal;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 code, kbd, pre, samp, tt {
@@ -91,4 +91,15 @@ code, kbd, pre, samp, tt {
 /* for IE7 */
 *+html code, kbd, pre, samp, tt {
   font-size:108%;
+}
+
+
+ul.pager {
+  list-style: none;
+  padding: 0px;
+}
+
+ul.pager li {
+	display: inline;
+	padding-right: 10px;
 }
