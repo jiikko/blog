@@ -94,7 +94,7 @@ code, kbd, pre, samp, tt {
 }
 
 
-ul.pager {
+ul.info, ul.links, ul.pager {
   list-style: none;
   padding: 0px;
 }
