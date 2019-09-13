@@ -1,4 +1,5 @@
-# encoding: utf-8
+# frozen_string_literal: true
+
 module Lokka
   module Before
     def self.registered(app)
@@ -17,7 +18,7 @@ module Lokka
           redirect request.referrer
         elsif session[:locale]
           I18n.locale = session[:locale]
-        elsif locales
+        elsif locales.present?
           I18n.locale = locales.first
         end
 
@@ -34,9 +35,7 @@ module Lokka
         )
 
         @theme_types ||= []
-        if @theme.exist_i18n?
-          ::I18n.load_path += Dir["#{@theme.i18n_dir}/*.yml"]
-        end
+        ::I18n.load_path += Dir["#{@theme.i18n_dir}/*.yml"] if @theme.exist_i18n?
       end
 
       app.before %r{(?!^/admin/login$)^/admin/.*$} do

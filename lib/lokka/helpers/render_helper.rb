@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Lokka
   module RenderHelper
     def render_detect(*names)
@@ -6,6 +8,7 @@ module Lokka
 
     def render_detect_with_options(names, options = {})
       ret = ''
+      options[:layout] = 'layout'
       names.each do |name|
         out = render_any(name, options)
         unless out.blank?
@@ -14,11 +17,8 @@ module Lokka
         end
       end
 
-      if ret.blank?
-        raise Lokka::NoTemplateError, "Template not found. #{[names.join(', ')]}"
-      else
-        ret
-      end
+      return ret if ret.present?
+      raise Lokka::NoTemplateError, "Template not found. #{[names.join(', ')]}"
     end
 
     def partial(name, options = {})
@@ -45,9 +45,7 @@ module Lokka
       options[:views] ||= "#{settings.views}/theme/#{@theme.name}"
       path = "#{options[:views]}/#{name}"
 
-      if File.exist?("#{path}.#{ext}")
-        send(ext.to_sym, name.to_sym, options)
-      end
+      send(ext.to_sym, name.to_sym, options) if File.exist?("#{path}.#{ext}")
     end
   end
 end
