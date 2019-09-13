@@ -10,7 +10,7 @@ set :app_name, 'blog'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 set :bundle_without, %w{development test postgresql}.join(' ')
 
-set :rvm_ruby_version, '2.2.3'
+set :rvm_ruby_version, '2.5.6'
 
 # set :format, :pretty
 # set :log_level, :debug
