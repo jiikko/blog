@@ -116,3 +116,8 @@ end
 ## Copyright
 
 Copyright (c) 2010 Masaki Komagata. See LICENSE for details.
+
+## Deploy
+```
+bundle exec cap production deploy:unicorn:start
+```
