@@ -54,6 +54,9 @@ group :development do
   gem 'dm-sqlite-adapter', '1.2.0'
   gem 'haml-lint'
   gem 'rubocop'
+  gem 'capistrano', '3.3.5', require: false
+  gem 'capistrano-rvm', require: false
+  gem 'capistrano-bundler', require: false
 end
 
 group :test do
