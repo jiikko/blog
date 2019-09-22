@@ -7,7 +7,7 @@ gem 'builder'
 gem 'bundler'
 gem 'coderay', '1.0.5'
 gem 'coffee-script'
-gem 'compass', '1.0.3'
+gem 'compass'
 gem 'data_objects',     '0.10.17'
 gem 'dm-aggregates',    '~> 1.2.0'
 gem 'dm-core',          '~> 1.2.1'
@@ -32,7 +32,7 @@ gem 'rake', '~> 11.0'
 gem 'redcarpet'
 gem 'RedCloth', '4.2.9'
 gem 'request_store'
-gem 'sass', '3.4.25'
+gem 'sass'
 gem 'sinatra', '~> 1.4.2'
 gem 'sinatra-contrib', '~> 1.4.0'
 gem 'sinatra-flash', '~> 0.3.0'
@@ -40,13 +40,6 @@ gem 'slim', '~> 3.0.7'
 gem 'tilt', '~> 2.0'
 gem 'tux'
 gem 'yard-sinatra', '1.0.0'
-gem 'backports', '2.3.0'
-gem 'coffee-script'
-gem 'therubyracer'
-gem 'unicorn'
-gem 'request_store'
-gem 'aws-sdk'
-gem 'mimemagic'
 
 Dir['public/plugin/lokka-*/Gemfile'].each {|path| load(path) }
 
@@ -55,14 +48,10 @@ end
 
 group :development, :test do
   gem 'tapp', '1.3.0'
-  gem 'pry'
 end
 
 group :development do
   gem 'dm-sqlite-adapter', '1.2.0'
-  gem 'capistrano', '3.3.5', require: false
-  gem 'capistrano-rvm', require: false
-  gem 'capistrano-bundler', require: false
   gem 'haml-lint'
   gem 'rubocop'
 end
