@@ -403,7 +403,7 @@ module Lokka
       digest = Digest::MD5.file(tempfile.path).to_s
       extname = File.extname(tempfile.path)
       filename = digest + extname
-      content_type = MimeMagic.by_magic(tempfile).type
+      content_type = Marcel::MimeType.for(tempfile)
       if bucket.object(filename).upload_file(tempfile.path, content_type: content_type)
         {
           message: 'File upload success',
@@ -416,6 +416,23 @@ module Lokka
           status: 400
         }
       end
+    rescue StandardError => e
+      {
+        message: e.message,
+        status: 500
+      }
+    end
+
+    def handle_entry_preview(params)
+      markup   = params[:markup]   || @site.default_markup
+      raw_body = params[:raw_body] || ''
+      body     = Markup.use_engine(markup, raw_body)
+      {
+        message: 'Preview successfull',
+        body: body,
+        markup: markup,
+        status: 201
+      }
     rescue StandardError => e
       {
         message: e.message,
