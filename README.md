@@ -117,7 +117,16 @@ end
 
 Copyright (c) 2010 Masaki Komagata. See LICENSE for details.
 
-## Deploy
+## Docker for CloudRun
+
 ```
-bundle exec cap production deploy:unicorn:start
+docker build -t gcr.io/jiikko/blog .
+docker run -it --rm gcr.io/jiikko/blog
+```
+
+## Deploy to CloudRun
+
+```
+docker buildx build --platform linux/amd64 -t gcr.io/jiikko/blog . --push
+gcloud run deploy --image gcr.io/jiikko/blog --max-instances=1 --region=asia-northeast1 --allow-unauthenticated
 ```
