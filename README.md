@@ -113,10 +113,6 @@ module Lokka::Hello
 end
 ```
 
-## Copyright
-
-Copyright (c) 2010 Masaki Komagata. See LICENSE for details.
-
 ## Dockerで動作確認
 * docker build -t gcr.io/jiikko/blog .
 * ローカルのDBを使う
@@ -142,3 +138,7 @@ gcloud run deploy blog --image gcr.io/jiikko/blog \
 ## TODO
 * DATABASE_URLかDATABASE_PASSWORDをシークレットマネージャーで管理する
     * https://cloud.google.com/build/docs/securing-builds/use-secrets?hl=ja
+
+## Copyright
+
+Copyright (c) 2010 Masaki Komagata. See LICENSE for details.
