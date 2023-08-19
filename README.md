@@ -123,12 +123,10 @@ end
   * `docker run -it -e RACK_ENV=production -e DATABASE_URL="mysql://koji:${DATABASE_PASSWORD}@localhost/lokka_production?socket=/cloudsql/jiikko:asia-northeast1:hoby-db" -p 8080:8080 --rm gcr.io/jiikko/blog`
 
 ## Deploy to Cloud Run
-* pushすれば環境変数を引き継いでCCP側でデプロイをする
-* 初回デプロイするときは次のコマンドを実行する
-
 ```
-docker buildx build --platform linux/amd64 -t gcr.io/jiikko/blog . --push
-gcloud run deploy blog --image gcr.io/jiikko/blog \
+gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+docker buildx build --platform linux/amd64 -t asia-northeast1-docker.pkg.dev/jiikko/blog/web:master --push .
+gcloud run deploy blog --image asia-northeast1-docker.pkg.dev/jiikko/blog/web:master \
     --max-instances=1 --region=asia-northeast1 \
     --allow-unauthenticated \
     --set-env-vars RACK_ENV=production \
