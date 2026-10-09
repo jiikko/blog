@@ -1,0 +1,48 @@
+#!/bin/bash
+# Run the dev server with Apple's `container` CLI (in place of docker compose).
+#
+#   bin/dev-container up [--build]   build the image if needed, then start the container
+#   bin/dev-container down           stop and delete the container
+#
+# The repo is bind-mounted at /app. The dev DB is SQLite (db/development.sqlite3,
+# per database.default.yml), so this does not start the mysql service from
+# docker-compose.yml. That service's DB_HOST setting is not read by
+# database.default.yml anyway.
+set -euo pipefail
+
+NAME=blog-dev
+IMAGE=blog-dev:latest
+PORT="${PORT:-8080}"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+
+exists() { container inspect "$NAME" >/dev/null 2>&1; }
+
+up() {
+  if [ "${1:-}" = "--build" ] || ! container image inspect "$IMAGE" >/dev/null 2>&1; then
+    container build -t "$IMAGE" "$ROOT"
+  fi
+  if exists; then
+    echo "$NAME already exists. Run 'bin/dev-container down' first." >&2
+    exit 1
+  fi
+  if [ ! -f "$ROOT/db/development.sqlite3" ]; then
+    container run --rm -v "$ROOT:/app" -w /app "$IMAGE" bundle exec rake db:setup
+  fi
+  container run -d --name "$NAME" -v "$ROOT:/app" -w /app -p "$PORT:8080" "$IMAGE"
+  echo "started: http://localhost:$PORT  (logs: container logs -f $NAME)"
+}
+
+down() {
+  if ! exists; then
+    echo "$NAME is not running"
+    return 0
+  fi
+  container stop "$NAME"
+  container delete "$NAME"
+}
+
+case "${1:-}" in
+  up) shift; up "$@" ;;
+  down) down ;;
+  *) echo "usage: $0 {up [--build]|down}" >&2; exit 2 ;;
+esac

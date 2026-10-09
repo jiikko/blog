@@ -113,6 +113,10 @@ module Lokka::Hello
 end
 ```
 
+## container (Apple) で動作確認
+* `bin/dev-container up` で起動し、http://localhost:8080 を開く。Dockerfile を変えたら `up --build`。DB は SQLite で、初回は `db:setup` を自動で実行する
+* `bin/dev-container down` で停止・削除
+
 ## Dockerで動作確認
 * docker build -t gcr.io/jiikko/blog .
 * ローカルのDBを使う
