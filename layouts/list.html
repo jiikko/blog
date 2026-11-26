@@ -1,5 +1,4 @@
 {{ define "main" }}
-<h2>{{ .Title }}</h2>
 {{ $pages := .Pages.ByDate.Reverse }}
 {{ if gt (len $pages) 0 }}
   {{ $paginator := .Paginate $pages }}

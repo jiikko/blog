@@ -7,6 +7,8 @@ publishDir = "dist"
 i18nDir = "hugo-i18n"
 # Lokka served tag pages at /tags/<name as typed>/ (e.g. /tags/ErgodoxEZ/); keep the case.
 disablePathToLower = true
+# Lokka showed tag and category names as typed ("ruby"); Hugo would title-case them.
+capitalizeListTitles = false
 
 [pagination]
 pagerSize = 10
@@ -46,5 +48,5 @@ noUgly = true
 [outputs]
 home = ["html", "atom"]
 
-[permalinks.page]
-years = "/:title/"
+[permalinks.section]
+years = "/:sections[last]/"

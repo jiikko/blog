@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <meta http-equiv="Content-Script-Type" content="text/javascript" />
-    <title>{{ if .IsPage }}{{ .Title }} - {{ end }}{{ .Site.Title }}</title>
+    <title>{{ if and .IsPage (eq .Section "posts") }}{{ .Title }} - {{ end }}{{ .Site.Title }}</title>
     {{ with .Site.Params.description }}<meta name="description" content="{{ . }}" />{{ end }}
     {{ with .Site.Params.keywords }}<meta name="keywords" content="{{ . }}" />{{ end }}
     <link rel="shortcut icon" href="{{ "theme/blog.jiikko.com/favicon.ico" | relURL }}" />

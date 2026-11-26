@@ -1,25 +1,23 @@
+{{- /* Same markup and window as Lokka's pager: current page ±3 (7 pages), "..." when more pages lie outside, the current page is a link with class "active". */ -}}
 {{ with .Paginator }}
-{{ if gt .TotalPages 1 }}
 <div class="pager">
+{{ if gt .TotalPages 1 }}
+  {{ $cur := .PageNumber }}
+  {{ $total := .TotalPages }}
+  {{ $from := math.Max 1 (sub $cur 3) | int }}
+  {{ $to := math.Min $total (add $from 6) | int }}
+  {{ $from = math.Max 1 (sub $to 6) | int }}
   <ul class="pager">
-    {{ if .HasPrev }}
-    <li><a href="{{ .First.URL }}">First</a></li>
-    <li><a href="{{ .Prev.URL }}">Previous</a></li>
-    {{ end }}
-    {{ range .Pagers }}
-    <li>
-      {{ if eq .PageNumber $.Paginator.PageNumber }}
-        <strong>{{ .PageNumber }}</strong>
-      {{ else }}
-        <a href="{{ .URL }}">{{ .PageNumber }}</a>
-      {{ end }}
-    </li>
-    {{ end }}
-    {{ if .HasNext }}
-    <li><a href="{{ .Next.URL }}">Next</a></li>
-    <li><a href="{{ .Last.URL }}">Last</a></li>
-    {{ end }}
+  {{ if .HasPrev }}<li class="first jump"><a href="{{ .First.URL }}">First</a></li>
+  <li class="previous jump"><a href="{{ .Prev.URL }}">Previous</a></li>{{ end }}
+  {{ if gt $from 1 }}<li class="more">...</li>{{ end }}
+  {{ range .Pagers }}{{ if and (ge .PageNumber $from) (le .PageNumber $to) }}
+  <li class="page-{{ .PageNumber }}{{ if eq .PageNumber $cur }} active{{ end }}"><a href="{{ .URL }}">{{ .PageNumber }}</a></li>
+  {{ end }}{{ end }}
+  {{ if lt $to $total }}<li class="more">...</li>{{ end }}
+  {{ if .HasNext }}<li class="next jump"><a href="{{ .Next.URL }}">Next</a></li>
+  <li class="last jump"><a href="{{ .Last.URL }}">Last</a></li>{{ end }}
   </ul>
-</div>
 {{ end }}
+</div>
 {{ end }}

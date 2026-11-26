@@ -1,0 +1,7 @@
+{{ define "main" }}
+{{- /* Year archive /YYYY/ (content/years/_content.gotmpl). Paginated like Lokka: 10 per page, newest first. */ -}}
+{{ $posts := where (where site.RegularPages "Section" "posts") "Date.Year" (int .Params.year) }}
+{{ $paginator := .Paginate $posts.ByDate.Reverse }}
+{{ range $paginator.Pages }}{{ partial "post-row.html" . }}{{ end }}
+{{ partial "pagination.html" . }}
+{{ end }}
