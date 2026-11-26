@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <title>404 Page was not found.</title>
+    {{ with .Site.Params.description }}<meta name="description" content="{{ . }}" />{{ end }}
+    {{ with .Site.Params.keywords }}<meta name="keywords" content="{{ . }}" />{{ end }}
+    <link rel="shortcut icon" href="{{ "theme/blog.jiikko.com/favicon.ico" | relURL }}" />
+    <link rel="stylesheet" href="{{ "theme/blog.jiikko.com/style.css" | relURL }}" type="text/css" />
+  </head>
+  <body>
+    <div id="header">
+      <h1 class="wide"><a href="{{ .Site.Home.RelPermalink }}">{{ .Site.Title }}</a></h1>
+    </div>
+    <div id="container">
+      <div id="main">
+        <p>404 page was not found.</p>
+      </div>
+    </div>
+    <div id="footer">
+      <div class="copy"><a href="{{ .Site.Home.RelPermalink }}">{{ .Site.Title }}</a></div>
+    </div>
+  </body>
+</html>

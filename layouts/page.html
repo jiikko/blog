@@ -1,0 +1,37 @@
+{{ define "main" }}
+<div class="article section">
+  <div class="header">
+    <h2 class="title">{{ .Title }}</h2>
+  </div>
+
+  <div class="body">
+    {{ if .Params.rendered_html }}
+      {{ .RawContent | safeHTML }}
+    {{ else }}
+      {{ .Content }}
+    {{ end }}
+  </div>
+
+  <ul class="info">
+    {{ with .GetTerms "category" }}
+      <span style="float:left; margin-right: 5px;">category:</span>
+      {{ range . }}<li class="category"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}
+    {{ end }}
+    {{ with .GetTerms "tags" }}
+      <span style="float:left; margin-right: 5px;">tags:</span>
+      <li class="tags">
+        <ul class="tags">
+          {{ range . }}<li class="tag"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}
+        </ul>
+      </li>
+    {{ end }}
+    <br class="clear_fix" />
+  </ul>
+
+  {{ with .Date }}
+  <div class="footer">
+    <div class="created_at">{{ .Format "2006年1月2日" }}</div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

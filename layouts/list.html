@@ -1,0 +1,18 @@
+{{ define "main" }}
+<h2>{{ .Title }}</h2>
+{{ $pages := .Pages.ByDate.Reverse }}
+{{ if gt (len $pages) 0 }}
+  {{ $paginator := .Paginate $pages }}
+  {{ range $paginator.Pages }}
+  <div class="article section" style="margin-left:10px">
+    <div class="header" style="margin-bottom:10px;">
+      {{ .Date.Format "2006-01-02" }}
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </div>
+  </div>
+  {{ end }}
+  {{ partial "pagination.html" . }}
+{{ else }}
+  <p>記事はまだありません。</p>
+{{ end }}
+{{ end }}

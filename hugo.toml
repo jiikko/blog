@@ -1,0 +1,37 @@
+baseURL = "https://blog.jiikko.com/"
+locale = "ja-JP"
+timeZone = "Asia/Tokyo"
+title = "blog.jiikko.com"
+publishDir = "dist"
+# i18n/ holds Lokka's Ruby translations, which Hugo cannot parse. Point Hugo elsewhere until Lokka is removed (issue 011).
+i18nDir = "hugo-i18n"
+
+[pagination]
+pagerSize = 10
+path = "page"
+
+[taxonomies]
+category = "category"
+tag = "tags"
+
+[params]
+description = ""
+keywords = ""
+
+[markup.goldmark.renderer]
+# Legacy entries contain rendered HTML, embeds, and data URI images.
+unsafe = true
+
+[mediaTypes."application/atom+xml"]
+suffixes = ["atom"]
+
+[outputFormats.atom]
+mediaType = "application/atom+xml"
+baseName = "index"
+isPlainText = false
+isHTML = false
+rel = "alternate"
+noUgly = true
+
+[outputs]
+home = ["html", "atom"]

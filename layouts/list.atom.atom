@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ .Site.Title | htmlEscape | safeHTML }}</title>
+  <id>{{ .Site.BaseURL }}</id>
+  <link href="{{ .Site.BaseURL }}" />
+  <link href="{{ "index.atom" | absURL }}" rel="self" type="application/atom+xml" />
+  {{ $pages := .Site.RegularPages.ByDate.Reverse }}
+  {{ with $pages }}
+    {{ with index . 0 }}<updated>{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</updated>{{ end }}
+  {{ else }}
+    <updated>{{ now.Format "2006-01-02T15:04:05Z07:00" }}</updated>
+  {{ end }}
+  {{ range first 20 $pages }}
+  {{ $entry := . }}
+  {{ $content := .Content }}
+  {{ if .Params.rendered_html }}{{ $content = .RawContent }}{{ end }}
+  <entry>
+    <title>{{ .Title | htmlEscape | safeHTML }}</title>
+    <link href="{{ .Permalink }}" />
+    <id>{{ with .Params.atom_id }}{{ . }}{{ else }}tag:blog.jiikko.com,{{ $entry.Date.Format "2006-01-02T15:04:05Z07:00" }}{{ end }}</id>
+    <updated>{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}</updated>
+    <published>{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</published>
+    <content type="html">{{ $content | htmlEscape | safeHTML }}</content>
+  </entry>
+  {{ end }}
+</feed>

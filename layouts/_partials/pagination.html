@@ -1,0 +1,23 @@
+{{ with .Paginator }}
+<div class="pager">
+  <ul class="pager">
+    {{ if .HasPrev }}
+    <li><a href="{{ .First.URL }}">First</a></li>
+    <li><a href="{{ .Prev.URL }}">Previous</a></li>
+    {{ end }}
+    {{ range .Pagers }}
+    <li>
+      {{ if eq .PageNumber $.Paginator.PageNumber }}
+        <strong>{{ .PageNumber }}</strong>
+      {{ else }}
+        <a href="{{ .URL }}">{{ .PageNumber }}</a>
+      {{ end }}
+    </li>
+    {{ end }}
+    {{ if .HasNext }}
+    <li><a href="{{ .Next.URL }}">Next</a></li>
+    <li><a href="{{ .Last.URL }}">Last</a></li>
+    {{ end }}
+  </ul>
+</div>
+{{ end }}

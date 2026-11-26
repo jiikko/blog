@@ -17,6 +17,10 @@ config.yml
 /doc
 /.yardoc
 .sass-cache
+/dist/
+/resources/_gen/
+/hugo_stats.json
+/.hugo_build.lock
 database.yml
 *~
 /public/**/node_modules

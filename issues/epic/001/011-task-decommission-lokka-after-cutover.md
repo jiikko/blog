@@ -17,6 +17,7 @@ Cloud SQL のインスタンス `hoby-db` は**他のサービスと相乗りな
 2. GCP の片付け:
    - Cloud Run のサービス `blog`（`asia-northeast1`）とドメインマッピングを消す
    - Artifact Registry の `blog` リポジトリを消す
+   - Cloud Build のトリガー `rmgpgab-blog-asia-northeast1-jiikko-blog--mastnee`（`blog.jiikko.com` ブランチへの push で Docker をビルドして Cloud Run へデプロイする）を消す。2026-11-26 に無効化済み（Hugo 化の commit を push しても Lokka のビルドが走らないように）。戻すときもこのトリガーは要らない（DNS を戻せば、デプロイ済みのリビジョンがそのまま使える）
    - Cloud SQL の DB `lokka_production` を消す
    - DB ユーザー: 004 で作った専用ユーザーがあれば消す。`koji` が他のサービスと共用なら、パスワードを替える（古いブログの env と README に残っているため）
 3. AWS の鍵の片付け:
@@ -31,3 +32,4 @@ Cloud SQL のインスタンス `hoby-db` は**他のサービスと相乗りな
 
 - 2026-10-09: 起票
 - 2026-10-09: 反証レビュー 2 本（事実の照合 / 計画の抜けと順序）の指摘を、コードと本番で確かめてから反映した
+- 2026-11-26: Cloud Build のトリガー `blog` を無効化した（`gcloud builds triggers import` で `disabled: true`）。無効化の前の 5 回のビルド（2026-10-09〜10-12）はすべて FAILURE で、本番のリビジョン `blog-00022-qgz` は手で push したイメージ `web:master` のまま
