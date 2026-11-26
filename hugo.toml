@@ -47,6 +47,3 @@ noUgly = true
 
 [outputs]
 home = ["html", "atom"]
-
-[permalinks.section]
-years = "/:sections[last]/"

@@ -1,0 +1,2 @@
+{{- /* Lokka stored times without a zone and printed them with "+00:00" (feed and sitemap). Hugo reads the same values as Asia/Tokyo, so print the wall-clock text with "+00:00" to keep the old feed and sitemap values unchanged. */ -}}
+{{- return printf "%s+00:00" (.Format "2006-01-02T15:04:05") -}}

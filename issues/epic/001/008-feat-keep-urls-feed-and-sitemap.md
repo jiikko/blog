@@ -70,3 +70,10 @@
   - 日本語のタグ `/tags/スプラトゥーン/` は 200 で、題も正しい
   - Chrome で `/?page=3` → `/page/3/`、`/category/4/?page=2` → `/category/4/page/2/` に送られることを確かめた
   - 受け入れ条件 1 は満たした。2（全記事の `<id>` が旧 feed と一致）は、最新 20 件の `<id>` を front matter の `atom_id` から出しているところまで。旧 feed の `?page=1`〜`18` との全件の突き合わせはまだ
+- 2026-11-26: 年別 `/YYYY/` を消した（ユーザー決定）。旧ブログでは、年別のページ自身のページ送りを除いて、どのページ（トップ・記事・カテゴリー・タグ）・テーマ・記事の本文にも年別へのリンクが無く、旧 sitemap にも載っていなかった。消したので `/2015/` などは 404。`bin/check-legacy-urls` の確認対象からも外した
+- 2026-11-26: sitemap と Atom を旧ブログと機械で比べて揃えた
+  - sitemap: トップ（`changefreq daily` / `priority 1.0`）+ 全記事を新しい順。旧ブログにあった 11 件（トップ + 最新 10 件）は loc・lastmod・changefreq・priority まで一致。全体は 174 件（記事は 10 件から全件に増やした）。カテゴリー・タグの一覧は載せない（旧ブログと同じ）
+  - `lastmod` と Atom の日時: 旧ブログは DB の値に `+00:00` を付けて出していた。Hugo は同じ値を Asia/Tokyo として読み `+09:00` を付けていたので、指す時刻が 9 時間ずれていた。`layouts/_partials/lokka-time.html` で旧ブログと同じ文字列にした
+  - **Atom が XML として壊れていた**（テーマの移植のときから。先頭の `<?xml` を Hugo が `&lt;?xml` にエスケープしていた。これまでの確認は 200 かどうかだけだった）。直した
+  - Atom: フィードの `<id>`（`https://blog.jiikko.com:443/`）・`<updated>`（最新記事の更新日時）・件数 10・各記事の `<author><name>koji</name></author>` を旧ブログに揃えた。最新 10 件の id・published・updated・title・link・author が全件一致
+  - 旧ブログで 404 だった `/posts/`・`/category/`・`/tags/` は作らない（`content/<name>/_index.md` の `build.render = "never"`）

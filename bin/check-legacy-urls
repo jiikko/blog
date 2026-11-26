@@ -9,7 +9,6 @@ The URL list comes from content/ (the posts exported by bin/export-lokka-entries
   /<slug or id>             every post (no trailing slash, as Lokka served it)
   /category/<id>/           every category in content/category/
   /tags/<name>/             every tag used by a post (case and Japanese kept)
-  /YYYY/                    every year from the first post to this year
   /index.atom, /sitemap.xml
 
 Redirects are not followed, so a 308 (e.g. /210 -> /210/) counts as a failure: the old
@@ -19,7 +18,6 @@ Exit status: 0 when every URL answers 200, 1 otherwise (or when no posts are fou
 """
 
 import argparse
-import datetime
 import glob
 import os
 import re
@@ -36,7 +34,7 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def legacy_paths(content):
-    paths, tags, years = [], set(), set()
+    paths, tags = [], set()
     for f in sorted(glob.glob(os.path.join(content, "posts", "*.md"))):
         text = open(f, encoding="utf-8").read()
         if not re.search(r"^lokka_id = ", text, re.M):
@@ -45,15 +43,11 @@ def legacy_paths(content):
         m = re.search(r"^tags = \[(.*)\]$", text, re.M)
         if m:
             tags.update(re.findall(r'"((?:[^"\\]|\\.)*)"', m.group(1)))
-        m = re.search(r"^date = (\d{4})", text, re.M)
-        if m:
-            years.add(int(m.group(1)))
     if not paths:
         return []
     for d in sorted(glob.glob(os.path.join(content, "category", "*", "_index.md"))):
         paths.append("/category/" + os.path.basename(os.path.dirname(d)) + "/")
     paths += ["/tags/" + urllib.parse.quote(t) + "/" for t in sorted(tags)]
-    paths += [f"/{y}/" for y in range(min(years), datetime.date.today().year + 1)]
     paths += ["/index.atom", "/sitemap.xml"]
     return paths
 

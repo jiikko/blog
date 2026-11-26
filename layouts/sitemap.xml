@@ -1,11 +1,17 @@
-{{ printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+{{- /* Same shape as Lokka's sitemap (public/lokka/sitemap.builder): the top page with changefreq/priority, then posts newest first. Lokka listed only the latest 10; this lists every post. */ -}}
+{{ printf "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" | safeHTML }}
+{{ $posts := (where site.RegularPages "Section" "posts").ByDate.Reverse }}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  {{ range where .Pages "Sitemap.Disable" "ne" true }}
-  {{ if .Permalink }}
   <url>
-    <loc>{{ if eq .Section "posts" }}{{ partial "post-permalink.html" . }}{{ else }}{{ .Permalink }}{{ end }}</loc>
-    {{ if not .Lastmod.IsZero }}<lastmod>{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>{{ end }}
+    <loc>{{ site.BaseURL }}</loc>
+    {{ with index $posts 0 }}<lastmod>{{ partial "lokka-time.html" .Lastmod }}</lastmod>{{ end }}
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
   </url>
-  {{ end }}
+  {{ range $posts }}
+  <url>
+    <loc>{{ partial "post-permalink.html" . }}</loc>
+    <lastmod>{{ partial "lokka-time.html" .Lastmod }}</lastmod>
+  </url>
   {{ end }}
 </urlset>

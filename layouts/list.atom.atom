@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
+{{ printf "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" | safeHTML }}
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>{{ .Site.Title | htmlEscape | safeHTML }}</title>
-  <id>{{ .Site.BaseURL }}</id>
+  <id>https://blog.jiikko.com:443/</id>{{/* Lokka's feed id, kept so feed readers see the same feed. */}}
   <link href="{{ .Site.BaseURL }}" />
   <link href="{{ "index.atom" | absURL }}" rel="self" type="application/atom+xml" />
   {{ $pages := (where .Site.RegularPages "Section" "posts").ByDate.Reverse }}
   {{ with $pages }}
-    {{ with index . 0 }}<updated>{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</updated>{{ end }}
+    {{ with index . 0 }}<updated>{{ partial "lokka-time.html" .Lastmod }}</updated>{{ end }}
   {{ else }}
     <updated>{{ now.Format "2006-01-02T15:04:05Z07:00" }}</updated>
   {{ end }}
-  {{ range first 20 $pages }}
+  {{ range first 10 $pages }}{{/* Lokka served 10 per feed page. */}}
   {{ $entry := . }}
   {{ $content := .Content }}
   {{ if .Params.rendered_html }}{{ $content = .RawContent }}{{ end }}
@@ -18,8 +18,9 @@
     <title>{{ .Title | htmlEscape | safeHTML }}</title>
     <link href="{{ partial "post-permalink.html" . }}" />
     <id>{{ with .Params.atom_id }}{{ . }}{{ else }}tag:blog.jiikko.com,{{ $entry.Date.Format "2006-01-02T15:04:05Z07:00" }}{{ end }}</id>
-    <updated>{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}</updated>
-    <published>{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</published>
+    <updated>{{ partial "lokka-time.html" .Lastmod }}</updated>
+    <published>{{ partial "lokka-time.html" .Date }}</published>
+    <author><name>koji</name></author>
     <content type="html">{{ $content | htmlEscape | safeHTML }}</content>
   </entry>
   {{ end }}
