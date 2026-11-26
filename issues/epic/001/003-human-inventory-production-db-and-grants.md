@@ -79,3 +79,11 @@ SELECT (SELECT COUNT(*) FROM snippets) snippets, (SELECT COUNT(*) FROM field_nam
 - 2026-10-09: 起票
 - 2026-10-09: 反証レビュー 2 本（事実の照合 / 計画の抜けと順序）の指摘を、コードと本番で確かめてから反映した
 - 2026-10-09: ユーザーから DB に繋いでよいと言われた。接続方法は着手時にユーザーが渡す（TODO 節）。あわせて書き出しの方針を変えた。Markdown（kramdown / redcarpet）の記事は描画済みの HTML ではなく元の Markdown（`raw_body`）で渡し、CMS で Markdown のまま直せるようにする。Hugo（Goldmark）で描画した結果を本番のページと機械で比べて、ずれた記事だけ描画済みの HTML にする。Textile と HTML の記事は描画済みの HTML のまま（006）
+- 2026-11-26: ユーザーの許可を得て、ユーザーが起動した Cloud SQL Auth Proxy 経由で `lokka_production` の `mysqldump` を取った（パスワードは Cloud Run の `DATABASE_URL` から取り、表示していない。Secret Manager にブログ用の secret は無かった）。dump は手元の `tmp/db-export-2026-11-26/`（gitignore、権限 600）。手元の MySQL 8.0 のコンテナ `blog-lokka-dump`（127.0.0.1:13306）に入れて、手順 2〜7 の SQL を流した（本番には流していない）
+  - 2: Post 公開 173 / Post 下書き 25 / Page 2（2 件とも下書き）。記法は redcarpet 199・kramdown 1（Textile と HTML は 0）。slug を持つのは id 121 `resque` だけ
+  - 3: `created_at > updated_at` は 3 件（210・162・28）。created_at は管理画面で手で入れた値（162 は 00:00:00）を含み、タイムゾーンは決められない。006 は、今の画面の表示と同じになるよう created_at をそのまま Asia/Tokyo として扱った
+  - 4: taggings は全部 `Entry` で 102 件、タグ 33 個。カテゴリーは 11 個で親子なし（id 1 `postfix` は公開記事 0 件）。公開記事のうち 7 件はカテゴリー無し
+  - 5: `options` は `tracker`（値あり）と `tracker_dn`（空）の 2 行だけ。**AWS の鍵・S3 の設定は `options` に無かった**（002 の想定と違う）。`permalink_enabled` も無い
+  - 6: `amazonaws.com` を含む記事は 1 件
+  - 7: snippets 1 / field_names 0 / fields 0 / comments 2 / users 1 / sites 1
+- **残り**: 手順 1（`SHOW GRANTS`）はまだ。dump は `lokka_production` だけなので、`koji` が他の DB に届くかは分からない（004 の要否が決まらない）。本番に SELECT 1 本を流す許可が要る

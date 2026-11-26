@@ -22,8 +22,8 @@ The GitHub Actions workflow in `.github/workflows/hugo.yml` runs this build for 
 
 ## Content format
 
-Posts belong in `content/posts/`. Use the post archetype as a starting point. The database export will supply each post's title, creation date, updated date, legacy URL, category, tags and Atom ID. Category and tag terms will be written in the `category` and `tags` taxonomies so their archive routes can match the existing `/category/` and `/tags/` paths. Until that export is done, the post directory is intentionally empty.
+Posts belong in `content/posts/`. The 173 public Lokka posts were exported with `bin/export-lokka-entries` (run `bin/export-lokka-entries --help`). It reads a local MySQL copy restored from a `mysqldump` of `lokka_production`, writes one Markdown file per public post plus `content/category/<id>/_index.md`, and never writes to the database. Drafts and comments are not exported because this repository is public. Re-run it just before the DNS switch (issue 010) and check that `git diff` is empty.
 
-Legacy post bodies will be stored as rendered HTML so existing Textile, RedCloth, kramdown, embeds and data URI images can be preserved. The importer should set `rendered_html = true`; the single-page template will then emit the stored body as trusted HTML. New posts use Markdown by default. Hugo's Goldmark renderer also allows raw HTML in Markdown.
+Every Lokka post was written in Markdown (redcarpet, one in kramdown), so bodies are kept as the original Markdown. Each post keeps its legacy URL (`url`), its Lokka id (`lokka_id`), its category id (`category`, so `/category/<id>/` stays the same), its tags and the Atom ID the old feed used (`atom_id`). `hugo.toml` turns off Goldmark's typographer and code-fence highlighting so the output matches what redcarpet produced. New posts use Markdown by default. Hugo's Goldmark renderer also allows raw HTML in Markdown.
 
 The existing Lokka application and ERB theme remain in the repository temporarily as migration references. Hugo uses the templates in `layouts/` and the copied public assets in `static/theme/blog.jiikko.com/`.

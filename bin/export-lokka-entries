@@ -1,0 +1,166 @@
+#!/usr/bin/env python3
+"""Export public Lokka posts from a MySQL copy of lokka_production into Hugo content.
+
+Usage:
+  MYSQL_PWD=... bin/export-lokka-entries [--host 127.0.0.1] [--port 13306] [--user root]
+                                         [--database lokka_production] [--content content]
+
+Reads a *local copy* of the production database (restore a mysqldump into a local
+MySQL first; see issue 006). It never writes to the database.
+
+Writes:
+  content/posts/<slug or id>.md      one file per public post (type=Post, draft=0)
+  content/category/<id>/_index.md    one file per category, so /category/<id>/ keeps its URL
+
+Drafts (Post and Page) and comments are not exported: this repository is public.
+Post bodies are the original Markdown (redcarpet / kramdown). CRLF is normalized to LF.
+
+Exit status: 0 on success, 1 on any error (including zero posts found).
+Files under content/posts/ that carry a lokka_id but were not written by this run are
+listed on stderr as stale; they are not deleted.
+"""
+
+import argparse
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+MYSQL = shutil.which("mysql") or "/opt/homebrew/opt/mysql-client@8.0/bin/mysql"
+
+# Same string as the production feed (public/lokka/index.builder): tag:<host>,<created_at.to_s>.
+# created_at is stored without a zone and Lokka prints it with +00:00, so keep that text verbatim;
+# changing it makes every post look new in feed readers.
+ATOM_ID_PREFIX = "tag:https://blog.jiikko.com:443,"
+
+
+def query(args, sql):
+    cmd = [MYSQL, "-h", args.host, "-P", str(args.port), "-u", args.user,
+           "--default-character-set=utf8mb4", "-N", "-B", "-r", args.database, "-e", sql]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        sys.exit(f"mysql failed (rc={res.returncode}): {res.stderr.strip()}")
+    return [json.loads(line) for line in res.stdout.splitlines() if line.strip()]
+
+
+# redcarpet (autolink: true) linked bare URLs even when Japanese text touched them
+# ("、https://example.com/というgem"); Goldmark's linkify does not, so those links would
+# disappear. Wrap such URLs in <...> (a CommonMark autolink). Like redcarpet, a URL ends at
+# the first non-ASCII or whitespace character. Code, HTML attributes and existing links are
+# left alone.
+BARE_URL = re.compile(r"""(?<!=")(?<!=')(?<!\]\()(?<!<)\b(https?://[!#-;=?-~]*[0-9A-Za-z/_#=?&~-])""")
+
+
+def autolink_bare_urls(body):
+    out = []
+    in_fence = False
+    for line in body.split("\n"):
+        if re.match(r"\s*(```|~~~)", line):
+            in_fence = not in_fence
+            out.append(line)
+            continue
+        # Indented code and raw HTML blocks (a line starting with a tag) are not Markdown text.
+        if in_fence or line.startswith("    ") or line.startswith("\t") or re.match(r"\s*</?[A-Za-z]", line):
+            out.append(line)
+            continue
+        # Odd-numbered parts are inline code, Markdown links/images, <a>...</a> and HTML tags: keep as is.
+        parts = re.split(r"(`+[^`]*`+|!?\[[^\]]*\]\([^)]*\)|<a\b[^>]*>.*?</a>|<[^>]+>)", line)
+        for i in range(0, len(parts), 2):
+            parts[i] = BARE_URL.sub(r"<\1>", parts[i])
+        out.append("".join(parts))
+    return "\n".join(out)
+
+
+def toml_str(s):
+    # JSON string escapes (\" \\ \n \uXXXX) are valid TOML basic-string escapes.
+    return json.dumps(s, ensure_ascii=False)
+
+
+def toml_list(items):
+    return "[" + ", ".join(toml_str(i) for i in items) + "]"
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("--host", default="127.0.0.1")
+    p.add_argument("--port", type=int, default=13306)
+    p.add_argument("--user", default="root")
+    p.add_argument("--database", default="lokka_production")
+    p.add_argument("--content", default="content")
+    args = p.parse_args()
+
+    if "MYSQL_PWD" not in os.environ:
+        sys.exit("MYSQL_PWD is not set")
+
+    posts = query(args, """
+        SELECT JSON_OBJECT('id', id, 'slug', slug, 'title', title, 'body', body, 'markup', markup,
+               'category_id', category_id,
+               'created_at', DATE_FORMAT(created_at, '%Y-%m-%dT%H:%i:%s'),
+               'updated_at', DATE_FORMAT(updated_at, '%Y-%m-%dT%H:%i:%s'))
+        FROM entries WHERE type = 'Post' AND draft = 0 ORDER BY id""")
+    if not posts:
+        sys.exit("no public posts found")
+
+    tags = {}
+    for row in query(args, """
+        SELECT JSON_OBJECT('entry_id', g.taggable_id, 'name', t.name)
+        FROM taggings g JOIN tags t ON t.id = g.tag_id
+        WHERE g.taggable_type = 'Entry' ORDER BY g.id"""):
+        tags.setdefault(row["entry_id"], []).append(row["name"])
+
+    categories = query(args, "SELECT JSON_OBJECT('id', id, 'title', title) FROM categories ORDER BY id")
+
+    posts_dir = os.path.join(args.content, "posts")
+    os.makedirs(posts_dir, exist_ok=True)
+    written = set()
+    for e in posts:
+        name = e["slug"] if e["slug"] else str(e["id"])
+        if not re.fullmatch(r"[0-9A-Za-z_-]+", name):
+            sys.exit(f"entry {e['id']}: unexpected slug {name!r}")
+        fm = [
+            "+++",
+            f"title = {toml_str(e['title'] or '')}",
+            f"date = {e['created_at']}",
+            f"lastmod = {e['updated_at'] or e['created_at']}",
+            f"url = {toml_str('/' + name)}",
+            f"lokka_id = {e['id']}",
+            # "markup" is reserved by Hugo (it picks the renderer), so keep Lokka's value under another key.
+            f"lokka_markup = {toml_str(e['markup'] or '')}",
+            f"atom_id = {toml_str(ATOM_ID_PREFIX + e['created_at'] + '+00:00')}",
+        ]
+        if e["category_id"] is not None:
+            fm.append(f"category = {toml_list([str(e['category_id'])])}")
+        if e["id"] in tags:
+            fm.append(f"tags = {toml_list(tags[e['id']])}")
+        fm.append("+++")
+        body = (e["body"] or "").replace("\r\n", "\n").replace("\r", "\n")
+        body = autolink_bare_urls(body)
+        path = os.path.join(posts_dir, name + ".md")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("\n".join(fm) + "\n" + body.rstrip("\n") + "\n")
+        written.add(os.path.abspath(path))
+
+    for c in categories:
+        d = os.path.join(args.content, "category", str(c["id"]))
+        os.makedirs(d, exist_ok=True)
+        with open(os.path.join(d, "_index.md"), "w", encoding="utf-8") as f:
+            f.write(f"+++\ntitle = {toml_str(c['title'])}\n+++\n")
+
+    stale = []
+    for fn in sorted(os.listdir(posts_dir)):
+        path = os.path.abspath(os.path.join(posts_dir, fn))
+        if fn.endswith(".md") and path not in written:
+            with open(path, encoding="utf-8") as f:
+                if re.search(r"^lokka_id = ", f.read(), re.M):
+                    stale.append(fn)
+    for fn in stale:
+        print(f"stale (not in database): {posts_dir}/{fn}", file=sys.stderr)
+
+    print(f"posts: {len(written)}, categories: {len(categories)}, posts with tags: "
+          f"{sum(1 for e in posts if e['id'] in tags)}")
+
+
+if __name__ == "__main__":
+    main()

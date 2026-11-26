@@ -44,3 +44,13 @@
 - 2026-10-09: 起票
 - 2026-10-09: 反証レビュー 2 本（事実の照合 / 計画の抜けと順序）の指摘を、コードと本番で確かめてから反映した。一覧が本文を出していないこと、`feed_id` を足した
 - 2026-10-09: 方針を変えた（ユーザーの提案）。Markdown（kramdown / redcarpet）の記事は `raw_body` を `content/posts/<fuzzy_slug>.md` に出し、Hugo で描画した結果を本番の本文と比べて、ずれた記事だけ `long_body` の `.html` にする。Textile と HTML の記事は今までどおり `long_body` の `.html`。件数の内訳は 003 で取る。上の「本文」「受け入れ条件」は、003 の結果を見てから書き直す
+- 2026-11-26: 書き出した。rake ではなく `bin/export-lokka-entries`（Python。手元の MySQL のコピーを読む。`--help` あり）にした。記事が全部 Markdown だったので（003）、Lokka で描画せずに `body` をそのまま `.md` で出した
+  - 結果: 公開記事 173 件（`content/posts/<slug or id>.md`）、カテゴリー 11 個（`content/category/<id>/_index.md`）、タグ付きの記事 68 件。下書き・Page・コメントは出していない
+  - front matter: `title` / `date`（created_at を zone 無しで。`hugo.toml` の Asia/Tokyo で読まれ、今の表示と同じ日時になる）/ `lastmod` / `url` / `lokka_id` / `lokka_markup`（`markup` は Hugo の予約語で、描画エンジンの指定と衝突してビルドが落ちた）/ `atom_id`（本番の feed の `<id>` と同じ文字列）/ `category`（id の文字列）/ `tags`
+  - 本文の CRLF（195 件）は LF にした
+  - **本番との本文の比較**: 本番の 173 ページを取り、`<div class="body">` の中を Hugo の出力と比べた。見た目に関わらない違い（`<pre tabindex="0">`、見出しの `id`、`<img />` と `<img>`、`class="ruby"` と `class="language-ruby"`、タグの前後の空白）は比較の前に揃えた
+    - 最初は 16 件だけ一致。直したもの: Goldmark の typographer が `'` を `‘` にしていた → `hugo.toml` で off / 言語付きのコードブロックが色付き（暗い背景）になっていた → `codeFences = false` / 日本語に挟まれた URL（`、https://…という`）がリンクにならず 7 件でリンクが消えていた → 書き出しで裸の URL を `<…>` で囲む（コード・HTML のブロックの行・`<a>…</a>`・Markdown のリンクの中は触らない。最初の版はリンクの表示文字の URL とツイート埋め込みの `<a>` の中まで囲んでいて、59 と 197 で退行したので直した）
+    - 最後: **一致 158 件、違い 15 件**。違いは見て受け入れた: 197（本番の方が `<a>` を二重にしていて壊れている）/ 42・70・71（埋め込みの HTML を `<p>` で包むかどうか）/ 208（`~…~` が取り消し線になる。書き手の意図どおり）/ 32（`1)` が番号付きの箇条書きになる）/ 38（行頭の `*` が箇条書きになる）/ 20・72（2 文字下げの入れ子の箇条書きの深さが違う）/ 28・87（改行 `<br>` の有無）/ 150（閉じていないバッククォートの解釈）/ 181（段落末の空白）/ 34（`<img>` に空の `title`）/ 86（`www.` だけがリンクになるか）
+  - トップの最初の 10 件の並び、カテゴリーのページの題（`/category/4/` が「日記」）、Atom の `<id>` が本番と一致することも確かめた
+  - 受け入れ条件の「本文が一致」は上の 15 件を除いて満たした。`/resque` は `dist/resque/index.html` に出る（URL の形は 008）
+- 残り: タグの URL（Hugo が小文字にする）・ページ送り・年別アーカイブ・末尾のスラッシュは 008。Google Analytics の `tracker` は Universal Analytics の ID（`UA-`）で、UA は 2023 年に計測を止めているので移さない

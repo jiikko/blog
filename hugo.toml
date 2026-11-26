@@ -18,6 +18,14 @@ tag = "tags"
 description = ""
 keywords = ""
 
+# Posts were written for redcarpet without SmartyPants; keep quotes and dashes as typed.
+# The Lokka theme never colored code (style.css has no highlight rules); keep fenced code as plain <pre><code>.
+[markup.highlight]
+codeFences = false
+
+[markup.goldmark.extensions]
+typographer = false
+
 [markup.goldmark.renderer]
 # Legacy entries contain rendered HTML, embeds, and data URI images.
 unsafe = true
