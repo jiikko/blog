@@ -5,11 +5,7 @@
   </div>
 
   <div class="body">
-    {{ if .Params.rendered_html }}
-      {{ .RawContent | safeHTML }}
-    {{ else }}
-      {{ .Content }}
-    {{ end }}
+    {{ .Content }}
   </div>
 
   <ul class="info">

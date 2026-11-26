@@ -1,0 +1,8 @@
+{{- /* Time for the feed and sitemap. Call with (dict "page" . "t" .Lastmod).
+Posts exported from Lokka (lokka_id) keep Lokka's text: the stored wall-clock time with "+00:00", so their old feed and sitemap values do not change (Hugo reads those zone-less values as Asia/Tokyo).
+New posts carry a real zone in front matter, so print them as they are. */ -}}
+{{- if .page.Params.lokka_id -}}
+{{- return printf "%s+00:00" (.t.Format "2006-01-02T15:04:05") -}}
+{{- else -}}
+{{- return .t.Format "2006-01-02T15:04:05Z07:00" -}}
+{{- end -}}

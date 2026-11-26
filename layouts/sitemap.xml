@@ -4,14 +4,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>{{ site.BaseURL }}</loc>
-    {{ with index $posts 0 }}<lastmod>{{ partial "lokka-time.html" .Lastmod }}</lastmod>{{ end }}
+    {{ with index $posts 0 }}<lastmod>{{ partial "feed-time.html" (dict "page" . "t" .Lastmod) }}</lastmod>{{ end }}
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   {{ range $posts }}
   <url>
     <loc>{{ partial "post-permalink.html" . }}</loc>
-    <lastmod>{{ partial "lokka-time.html" .Lastmod }}</lastmod>
+    <lastmod>{{ partial "feed-time.html" (dict "page" . "t" .Lastmod) }}</lastmod>
   </url>
   {{ end }}
 </urlset>

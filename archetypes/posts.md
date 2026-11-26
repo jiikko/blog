@@ -6,6 +6,5 @@ draft = true
 url = "/{{ .Name }}.html"
 category = []
 tags = []
-rendered_html = false
 atom_id = ""
 +++
