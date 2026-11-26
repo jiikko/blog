@@ -11,6 +11,7 @@ The URL list comes from content/ (the posts exported by bin/export-lokka-entries
   /tags/<name>/             every tag used by a post (case and Japanese kept)
   /index.atom, /sitemap.xml
 
+/index.atom and /sitemap.xml must also parse as XML.
 Redirects are not followed, so a 308 (e.g. /210 -> /210/) counts as a failure: the old
 URL must answer 200 itself.
 
@@ -26,6 +27,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -69,8 +71,14 @@ def main():
     for path in paths:
         url = args.base.rstrip("/") + path
         try:
-            code = opener.open(url, timeout=30).status
-            where = ""
+            res = opener.open(url, timeout=30)
+            code, where = res.status, ""
+            if path.endswith((".atom", ".xml")):
+                # A 200 is not enough: the feed once shipped with an escaped "<?xml" and no reader could parse it.
+                try:
+                    ET.fromstring(res.read())
+                except ET.ParseError as e:
+                    code, where = "BAD-XML", str(e)
         except urllib.error.HTTPError as e:
             code, where = e.code, e.headers.get("Location", "")
         except OSError as e:
