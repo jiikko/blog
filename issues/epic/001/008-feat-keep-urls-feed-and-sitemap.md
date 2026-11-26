@@ -64,4 +64,9 @@
   - feed: 最新 20 件（本文は全文）。`<id>` は front matter の `atom_id`。リンクは拡張子無し
   - sitemap: `layouts/sitemap.xml` で全ページ（記事は拡張子無し）
   - `bin/check-legacy-urls <origin>` を作った: content/ から旧 URL（記事 173・カテゴリー 11・使われているタグ・年 2014〜今年・`/index.atom`・`/sitemap.xml`、計 227 件）を作り、リダイレクトを辿らずに 200 かを見る。較正: 今の本番では 227 件すべて 200。記事を入れる前の pages.dev では 225 件が 404（Atom と sitemap だけ 200）。Cloudflare は Python の既定の User-Agent に 403 を返すので、User-Agent を付けている
-  - **残り**: push してデプロイした後に `bin/check-legacy-urls https://blog-9oc.pages.dev` を回す。`?page=N` の JavaScript はブラウザで確かめる
+- 2026-11-26: ed9aa9e を push し、Cloudflare Pages のデプロイ後に確かめた
+  - `bin/check-legacy-urls https://blog-9oc.pages.dev`: **227 件すべて 200**（rc=0）。拡張子無しの `/210` が `210.html` で配信されることを確かめた（見込みだった点）
+  - `/210/` と `/210.html` は `/210` へ 308。`/page/2/`・`/tags/`・`/category/` は 200（`/tags/` と `/category/` は本番では 404 の URL。出して害は無い）
+  - 日本語のタグ `/tags/スプラトゥーン/` は 200 で、題も正しい
+  - Chrome で `/?page=3` → `/page/3/`、`/category/4/?page=2` → `/category/4/page/2/` に送られることを確かめた
+  - 受け入れ条件 1 は満たした。2（全記事の `<id>` が旧 feed と一致）は、最新 20 件の `<id>` を front matter の `atom_id` から出しているところまで。旧 feed の `?page=1`〜`18` との全件の突き合わせはまだ
