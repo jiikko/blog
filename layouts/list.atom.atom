@@ -4,7 +4,7 @@
   <id>{{ .Site.BaseURL }}</id>
   <link href="{{ .Site.BaseURL }}" />
   <link href="{{ "index.atom" | absURL }}" rel="self" type="application/atom+xml" />
-  {{ $pages := .Site.RegularPages.ByDate.Reverse }}
+  {{ $pages := (where .Site.RegularPages "Section" "posts").ByDate.Reverse }}
   {{ with $pages }}
     {{ with index . 0 }}<updated>{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</updated>{{ end }}
   {{ else }}
@@ -16,7 +16,7 @@
   {{ if .Params.rendered_html }}{{ $content = .RawContent }}{{ end }}
   <entry>
     <title>{{ .Title | htmlEscape | safeHTML }}</title>
-    <link href="{{ .Permalink }}" />
+    <link href="{{ partial "post-permalink.html" . }}" />
     <id>{{ with .Params.atom_id }}{{ . }}{{ else }}tag:blog.jiikko.com,{{ $entry.Date.Format "2006-01-02T15:04:05Z07:00" }}{{ end }}</id>
     <updated>{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}</updated>
     <published>{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</published>

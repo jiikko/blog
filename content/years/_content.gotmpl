@@ -1,0 +1,5 @@
+{{- /* One page per year at /YYYY/ (hugo.toml [permalinks.page] years = "/:title/"), to keep Lokka's year archive URLs. The first post is from 2014. */ -}}
+{{ range seq 2014 now.Year }}
+  {{ $y := string . }}
+  {{ $.AddPage (dict "path" $y "title" $y "kind" "page" "params" (dict "year" $y)) }}
+{{ end }}

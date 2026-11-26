@@ -5,6 +5,8 @@ title = "blog.jiikko.com"
 publishDir = "dist"
 # i18n/ holds Lokka's Ruby translations, which Hugo cannot parse. Point Hugo elsewhere until Lokka is removed (issue 011).
 i18nDir = "hugo-i18n"
+# Lokka served tag pages at /tags/<name as typed>/ (e.g. /tags/ErgodoxEZ/); keep the case.
+disablePathToLower = true
 
 [pagination]
 pagerSize = 10
@@ -43,3 +45,6 @@ noUgly = true
 
 [outputs]
 home = ["html", "atom"]
+
+[permalinks.page]
+years = "/:title/"

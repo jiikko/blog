@@ -1,0 +1,2 @@
+{{- /* Posts are written as /<name>.html and Cloudflare Pages serves them at /<name> (the old Lokka URL). Link to the extensionless form so readers and crawlers do not hit a 308 first. */ -}}
+{{- return strings.TrimSuffix ".html" .RelPermalink -}}

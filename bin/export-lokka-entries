@@ -124,7 +124,8 @@ def main():
             f"title = {toml_str(e['title'] or '')}",
             f"date = {e['created_at']}",
             f"lastmod = {e['updated_at'] or e['created_at']}",
-            f"url = {toml_str('/' + name)}",
+            # Written as /<name>.html; Cloudflare Pages serves it at /<name>, the Lokka URL (no trailing slash).
+            f"url = {toml_str('/' + name + '.html')}",
             f"lokka_id = {e['id']}",
             # "markup" is reserved by Hugo (it picks the renderer), so keep Lokka's value under another key.
             f"lokka_markup = {toml_str(e['markup'] or '')}",

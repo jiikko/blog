@@ -56,3 +56,12 @@
 
 - 2026-10-09: 起票
 - 2026-10-09: 反証レビュー 2 本（事実の照合 / 計画の抜けと順序）の指摘を、コードと本番で確かめてから反映した。feed のページ送りと本文、`pages.dev` での事前確認を足した
+- 2026-11-26: ユーザーの指示「旧ブログと同じ URL の構成にできるならそうし、できないなら旧 URL からリダイレクトする」で着手した
+  - 記事: front matter の `url = "/210.html"` で `210.html` を出し、Cloudflare Pages が拡張子無しの `/210` で配信する（デプロイ後に確かめる）。テンプレート・Atom・sitemap のリンクは `layouts/_partials/post-link.html` / `post-permalink.html` で `.html` を外す。`uglyURLs` はカテゴリーの URL を `/category/4.html` にしたので採らない。`[permalinks.page] posts = "/:contentbasename.html"` はリンクが `/210.html/` になったので採らない
+  - タグ: `disablePathToLower = true` で `/tags/ErgodoxEZ/` のように大文字小文字を保つ。日本語のタグもそのままのディレクトリ
+  - 年別: `content/years/_content.gotmpl` で 2014〜今年のページを作り、`[permalinks.page] years = "/:title/"` で `/YYYY/` に置く。本番の `?page=N` を辿った件数と一致（2015 年 26 件・2024 年 11 件・2025 年 2 件）。全件を 1 ページに出す
+  - ページ送り: 一覧のページ（`.IsPage` でないもの）に、`?page=N` を `/page/N/` へ送る JavaScript を入れた（サーバー側はクエリ文字列でリダイレクトできない）。範囲外の N は 404 になる（本番は空の一覧で 200）
+  - feed: 最新 20 件（本文は全文）。`<id>` は front matter の `atom_id`。リンクは拡張子無し
+  - sitemap: `layouts/sitemap.xml` で全ページ（記事は拡張子無し）
+  - `bin/check-legacy-urls <origin>` を作った: content/ から旧 URL（記事 173・カテゴリー 11・使われているタグ・年 2014〜今年・`/index.atom`・`/sitemap.xml`、計 227 件）を作り、リダイレクトを辿らずに 200 かを見る。較正: 今の本番では 227 件すべて 200。記事を入れる前の pages.dev では 225 件が 404（Atom と sitemap だけ 200）。Cloudflare は Python の既定の User-Agent に 403 を返すので、User-Agent を付けている
+  - **残り**: push してデプロイした後に `bin/check-legacy-urls https://blog-9oc.pages.dev` を回す。`?page=N` の JavaScript はブラウザで確かめる

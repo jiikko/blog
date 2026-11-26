@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+"""Request every Lokka-era URL on a deployed site and report the ones that do not answer 200.
+
+Usage:
+  bin/check-legacy-urls https://blog-9oc.pages.dev
+  bin/check-legacy-urls https://blog.jiikko.com
+
+The URL list comes from content/ (the posts exported by bin/export-lokka-entries):
+  /<slug or id>             every post (no trailing slash, as Lokka served it)
+  /category/<id>/           every category in content/category/
+  /tags/<name>/             every tag used by a post (case and Japanese kept)
+  /YYYY/                    every year from the first post to this year
+  /index.atom, /sitemap.xml
+
+Redirects are not followed, so a 308 (e.g. /210 -> /210/) counts as a failure: the old
+URL must answer 200 itself.
+
+Exit status: 0 when every URL answers 200, 1 otherwise (or when no posts are found).
+"""
+
+import argparse
+import datetime
+import glob
+import os
+import re
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):
+        return None
+
+
+def legacy_paths(content):
+    paths, tags, years = [], set(), set()
+    for f in sorted(glob.glob(os.path.join(content, "posts", "*.md"))):
+        text = open(f, encoding="utf-8").read()
+        if not re.search(r"^lokka_id = ", text, re.M):
+            continue
+        paths.append("/" + os.path.basename(f)[:-3])
+        m = re.search(r"^tags = \[(.*)\]$", text, re.M)
+        if m:
+            tags.update(re.findall(r'"((?:[^"\\]|\\.)*)"', m.group(1)))
+        m = re.search(r"^date = (\d{4})", text, re.M)
+        if m:
+            years.add(int(m.group(1)))
+    if not paths:
+        return []
+    for d in sorted(glob.glob(os.path.join(content, "category", "*", "_index.md"))):
+        paths.append("/category/" + os.path.basename(os.path.dirname(d)) + "/")
+    paths += ["/tags/" + urllib.parse.quote(t) + "/" for t in sorted(tags)]
+    paths += [f"/{y}/" for y in range(min(years), datetime.date.today().year + 1)]
+    paths += ["/index.atom", "/sitemap.xml"]
+    return paths
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("base", help="site origin, e.g. https://blog-9oc.pages.dev")
+    p.add_argument("--content", default="content")
+    p.add_argument("--delay", type=float, default=0.1, help="seconds between requests")
+    args = p.parse_args()
+
+    paths = legacy_paths(args.content)
+    if not paths:
+        sys.exit("no exported posts found under content/posts")
+    opener = urllib.request.build_opener(NoRedirect)
+    # Cloudflare answers 403 to the default "Python-urllib" User-Agent.
+    opener.addheaders = [("User-Agent", "check-legacy-urls")]
+    bad = []
+    for path in paths:
+        url = args.base.rstrip("/") + path
+        try:
+            code = opener.open(url, timeout=30).status
+            where = ""
+        except urllib.error.HTTPError as e:
+            code, where = e.code, e.headers.get("Location", "")
+        except OSError as e:
+            code, where = "ERR", str(e)
+        if code != 200:
+            bad.append((path, code, where))
+            print(f"{code} {urllib.parse.unquote(path)} {where}")
+        time.sleep(args.delay)
+    print(f"checked {len(paths)} URLs, not 200: {len(bad)}")
+    sys.exit(1 if bad else 0)
+
+
+if __name__ == "__main__":
+    main()

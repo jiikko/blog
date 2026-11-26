@@ -21,6 +21,19 @@
       ga('send', 'pageview');
     </script>
     {{ end }}
+    {{ if not .IsPage }}
+    <script>
+      // Lokka paged lists with ?page=N. Static hosting cannot redirect on a query string, so move old links to /page/N/.
+      (function () {
+        var m = location.search.match(/(?:^\?|&)page=(\d+)/);
+        if (!m) return;
+        var n = parseInt(m[1], 10);
+        var base = location.pathname.replace(/page\/\d+\/?$/, "");
+        if (base.slice(-1) !== "/") base += "/";
+        location.replace(n > 1 ? base + "page/" + n + "/" : base);
+      })();
+    </script>
+    {{ end }}
   </head>
   <body>
     <div id="header">

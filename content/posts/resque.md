@@ -2,7 +2,7 @@
 title = "Resque VS Sidekiq"
 date = 2019-01-20T14:38:11
 lastmod = 2019-01-20T15:33:34
-url = "/resque"
+url = "/resque.html"
 lokka_id = 121
 lokka_markup = "redcarpet"
 atom_id = "tag:https://blog.jiikko.com:443,2019-01-20T14:38:11+00:00"
