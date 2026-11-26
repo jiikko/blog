@@ -42,3 +42,9 @@ DNS は Route 53 のまま（サブドメインなので、ネームサーバー
   - 手順 1: 23:30 JST に A と AAAA の TTL を 60000 → 300 に下げた（値は変えていない。change `C037140520ICWRJAV0J94`）。60000 秒でキャッシュされた分は 2026-11-27 16:10 JST 頃まで残る
   - 手順 5: Cloudflare Pages のプロジェクト `blog` にカスタムドメイン `blog.jiikko.com` を登録した（「My DNS provider」→ CNAME `blog` → `blog-9oc.pages.dev`。状態は Initializing）。旧ブログはそのまま出ている
   - 手順 2〜4: 旧ブログの最後の記事は 2026-04-10。dump は 2026-11-26 21:45 に取り、書き出しは同じ dump から作った
+- 2026-11-26 23:53 JST: 切り替えた（ユーザーの判断で、TTL のキャッシュが切れる 11/27 16:10 を待たずに実行）
+  - 手順 6: Route 53 で A 4 本・AAAA 4 本を消し、CNAME `blog.jiikko.com.` → `blog-9oc.pages.dev`（TTL 300）を 1 つの変更で作った（change `C02685522TA8V1D6FI784`、INSYNC を確認）
+  - 権威 DNS は 10 秒以内に CNAME を返した。1.1.1.1 / 8.8.8.8 / 9.9.9.9 も新しいサイトを返す。古い A をキャッシュしているリゾルバー（このマシンも）は 11/27 16:10 頃まで旧ブログを返しうる
+  - 手順 7: Cloudflare のカスタムドメインは約 6 分で Active になり、証明書も有効。`bin/check-legacy-urls https://blog.jiikko.com` を Cloudflare の IP に直接つないで回し、**215 件すべて 200**（Atom と sitemap は XML として読める）。配信元は `server: cloudflare`
+  - **戻し方**: `aws route53 change-resource-record-sets --hosted-zone-id Z08016334XYBKITOC2DN --change-batch file://...` に、CNAME を DELETE して上の A 4 本・AAAA 4 本（TTL 300）を CREATE する変更を渡す（作業中は `tmp/dns-2026-11-26/rollback.json` に用意した。tmp は消えるので、上の値から作り直せるように値をここに残している）。旧 Cloud Run はそのまま動いている
+  - 残り: 手順 8（Search Console に新しい sitemap を出す。人の作業）、手順 9（旧 Cloud Run の公開を閉じる。戻せる期間との兼ね合いでユーザーに確認する）。手順 10 は 003 で `options` に AWS の鍵が無かったので不要
