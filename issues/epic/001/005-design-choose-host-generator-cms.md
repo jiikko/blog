@@ -38,3 +38,9 @@ Astro / Jekyll を選ばない理由: どちらも Node か Ruby のツールチ
 - 2026-10-09: 起票（推奨を置いた。ユーザーの決定待ち）
 - 2026-10-09: 反証レビュー 2 本（事実の照合 / 計画の抜けと順序）の指摘を、コードと本番で確かめてから反映した
 - 2026-11-26: 配信先を Cloudflare Pages に、repo を public のままにすると決めた（ユーザー決定）。`gh repo view` で public の fork であること、`gh api .../actions/permissions` で Actions が有効なことを確かめた
+- 2026-11-26: Cloudflare Pages のプロジェクト `blog` を作った（`https://blog-9oc.pages.dev`。カスタムドメインはまだ付けない。010 で付ける）
+  - 設定: 本番ブランチ `blog.jiikko.com` / Build command `hugo --gc --minify` / 出力 `dist` / 環境変数 `HUGO_VERSION=0.170.0`・`SKIP_DEPENDENCY_INSTALL=1`
+  - 最初のビルドは失敗した。ルートの Lokka の `.ruby-version` を見て Ruby 2.6.10 をコンパイルし（約 4 分）、`Gemfile` で `bundle install` を走らせて bundler 2.3.23 が無いと落ちた。Hugo は走っていなかった
+  - `SKIP_DEPENDENCY_INSTALL=1` で `bundle install` は止まり、2 回目は成功した（f3be148、ビルド 3m57s）。**Ruby のコンパイルは止まらず、毎回約 4 分かかる**。Lokka のファイルを消す 011 まで続く
+  - `SKIP_DEPENDENCY_INSTALL` は Production の環境にだけ入れた。PR のプレビュー（Preview の環境）では入っていないので、PR を作るとプレビューのビルドは同じく失敗する見込み（未確認）
+  - GitHub App「Cloudflare Workers and Pages」は、Cloudflare の repo 一覧に `blog` 以外も出たので、All repositories で入った可能性が高い（API では確かめられなかった）。`jiikko/blog` だけに絞るのはユーザーの作業

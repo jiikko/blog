@@ -24,6 +24,7 @@ Cloud SQL のインスタンス `hoby-db` は**他のサービスと相乗りな
    - `options` の `aws_access_key_id` / `aws_secret_access_key` に対応する IAM のアクセスキーを消す（010 で無効にしていなければ、ここで無効にしてから消す）
    - アップロード用の S3 バケット（`options` の `s3_bucket_name`）は、003 で本文からの参照が無いと分かれば消してよい。参照があれば残す
 4. この repo（Lokka の fork）:
+   - Lokka の `.ruby-version`・`Gemfile`・`Gemfile.lock` を消したら、Cloudflare Pages の環境変数 `SKIP_DEPENDENCY_INSTALL` を外し、ビルドで Ruby のコンパイル（約 4 分）が消えたことをログで確かめる（005 の 2026-11-26）。`hugo.toml` の `i18nDir` も外す
    - README の「Deploy to Cloud Run」を消し、新しいサイトの repo を指す
    - GitHub で archive する（archive しても読み取りはできるので、書き出しスクリプトは後からでも参照できる）
    - 本文の画像は別の repo `jiikko/cdn` にあるので、この repo を archive しても切れない
