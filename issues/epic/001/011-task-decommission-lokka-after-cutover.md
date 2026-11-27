@@ -43,3 +43,13 @@ Cloud SQL のインスタンス `hoby-db` は**他のサービスと相乗りな
 - 2026-11-27: GitHub の Settings → Danger Zone の「Leave fork network」で、`jiikko/blog` を `lokka/lokka` の fork network から外した（ユーザーの指示。取り消せない操作。sudo mode の認証はユーザーが行った）。`gh api repos/jiikko/blog` は `fork: false`・`parent: null`。repo の id は 14086612 のまま変わらなかった
 
 - 2026-11-27: DB ユーザー `koji` のパスワードは変えない（ユーザー決定「db は削除するのでやらない」）。手順 2 の最後の項はこれで決着。CMS は使わないと決め、009 は削除した
+- 2026-11-27 19:48〜19:55 JST: 残りを済ませた（ユーザーの指示「今やっていいよ。もう使わないので」。着手の条件の 2 週間を待たずに実行）
+  - 手順 1: dump（2026-11-26 21:45 に取った `lokka_production`、472,880 バイト、末尾に `Dump completed`）を `~/backup/blog.jiikko.com/lokka_production-2026-11-26.sql`（ディレクトリ 700・ファイル 600）に写した。sha256 は元と一致（`d393a8d9…f828`）。dump の後に DB へ入った変更（旧サイトを閉じるまでのコメント等）は含まない
+  - 手順 2: ドメインマッピング `blog.jiikko.com`（Cloud Run の REST API で DELETE。gcloud の GA には無い）・Cloud Run のサービス `blog`・Cloud Build のトリガー（global にあった）・Artifact Registry の `blog`（133.9 MB）・`hoby-db` の DB `lokka_production` を消した。`hoby-db` と他の DB・サービス・トリガー・マッピングは残っている（消した後に一覧で確認）
+  - DB ユーザー `koji` のパスワードは変えない（上の決定）
+  - 手順 3: 不要。003 で `options` に AWS の鍵も S3 の設定も無く、本文もアップロード用の S3 を参照していなかった
+  - 手順 4: 済み（上の進捗）。archive はしない
+  - 手元の書き出し用の MySQL のコンテナ `blog-lokka-dump` も止めて消した
+  - 確認: `https://blog.jiikko.com/` は 200、旧 `https://blog-7hrjn5ej3q-an.a.run.app/` は 404
+  - **もう旧ブログへは戻せない**（サービスとイメージを消した）。残っているのは dump と、git の履歴にある Lokka のコード
+  - 残り（任意）: Cloudflare Pages の環境変数 `SKIP_DEPENDENCY_INSTALL` を外す（害は無い）
