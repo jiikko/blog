@@ -22,6 +22,8 @@ The GitHub Actions workflow in `.github/workflows/hugo.yml` runs this build for 
 
 ## 記事の書き方（更新マニュアル）
 
+Claude Code には「記事を書いて」と頼めばよい。この repo の skill `new-post`（`.claude/skills/new-post/SKILL.md`）が、この節の手順を確かめる段つきで進める（名前の衝突・ビルド・公開の承認・本番での確認）。決まりごとの正本はこの節なので、変えるときはここを直す。
+
 1. 記事のファイルを作る。ファイル名がそのまま URL になる（`content/posts/my-post.md` → `https://blog.jiikko.com/my-post`）
 
    ```sh
