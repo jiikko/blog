@@ -53,3 +53,4 @@ DNS は Route 53 のまま（サブドメインなので、ネームサーバー
   - 約 30 秒後から `https://blog-7hrjn5ej3q-an.a.run.app/` は 403。`https://blog.jiikko.com/` は 200（Cloudflare）のまま
   - **戻すときは DNS の前に開け直す**: `gcloud run services add-iam-policy-binding blog --region asia-northeast1 --member=allUsers --role=roles/run.invoker`（ドメインマッピング経由のアクセスも同じ権限が要る）
   - 残り: 手順 8（Search Console。人の作業）
+- 2026-11-27: 手順 8 は行わない（ユーザーの判断「送らなくてもクロールしてくれる」）。記事と `/sitemap.xml` の URL は旧ブログと同じなので、Google は登録済みの URL を取り直す。`/robots.txt` は Cloudflare が出すコメントだけのもので、Disallow も Sitemap の行も無い（2026-11-27 に curl で確認）。手順はこれで全部済んだ
