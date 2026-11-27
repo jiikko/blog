@@ -48,3 +48,8 @@ DNS は Route 53 のまま（サブドメインなので、ネームサーバー
   - 手順 7: Cloudflare のカスタムドメインは約 6 分で Active になり、証明書も有効。`bin/check-legacy-urls https://blog.jiikko.com` を Cloudflare の IP に直接つないで回し、**215 件すべて 200**（Atom と sitemap は XML として読める）。配信元は `server: cloudflare`
   - **戻し方**: `aws route53 change-resource-record-sets --hosted-zone-id Z08016334XYBKITOC2DN --change-batch file://...` に、CNAME を DELETE して上の A 4 本・AAAA 4 本（TTL 300）を CREATE する変更を渡す（作業中は `tmp/dns-2026-11-26/rollback.json` に用意した。tmp は消えるので、上の値から作り直せるように値をここに残している）。旧 Cloud Run はそのまま動いている
   - 残り: 手順 8（Search Console に新しい sitemap を出す。人の作業）、手順 9（旧 Cloud Run の公開を閉じる。戻せる期間との兼ね合いでユーザーに確認する）。手順 10 は 003 で `options` に AWS の鍵が無かったので不要
+- 2026-11-27 18:37 JST: 手順 9 を済ませた（ユーザーの指示「16:10 以降に閉じていいよ」）
+  - 旧 Cloud Run `blog`（asia-northeast1）から `allUsers` の `roles/run.invoker` を外した。IAM のポリシーは空になった。ingress は `all` のまま
+  - 約 30 秒後から `https://blog-7hrjn5ej3q-an.a.run.app/` は 403。`https://blog.jiikko.com/` は 200（Cloudflare）のまま
+  - **戻すときは DNS の前に開け直す**: `gcloud run services add-iam-policy-binding blog --region asia-northeast1 --member=allUsers --role=roles/run.invoker`（ドメインマッピング経由のアクセスも同じ権限が要る）
+  - 残り: 手順 8（Search Console。人の作業）
