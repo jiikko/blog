@@ -93,3 +93,4 @@ SELECT (SELECT COUNT(*) FROM snippets) snippets, (SELECT COUNT(*) FROM field_nam
 閉じる。棚卸しの目的（006 の書き出しの形を決める・004 の要否を決める）はなくなった。
 - 書き出しは 2026-11-26 に本番の dump から済ませた（006）
 - 手順 1 の `SHOW GRANTS` は流さない。`koji` が他の DB に届くかを知る目的は 004 と、011 の `koji` のパスワード変更のためだったが、どちらも行わない（2026-11-27 のユーザー決定「db は削除するのでやらない」）
+- 2026-11-27: `tmp/` の作業ファイルは消した。dump は `~/backup/blog.jiikko.com/lokka_production-2026-11-26.sql` に写してある（011）
