@@ -40,3 +40,4 @@ Cloud SQL のインスタンス `hoby-db` は**他のサービスと相乗りな
   - Pages のビルドは commit から約 16 秒で成功した（前は Ruby のコンパイルで約 4 分）。`bin/check-legacy-urls https://blog.jiikko.com` は 215 件すべて 200
   - 書き換え: 手順 4 の「新しいサイトの repo を指す」「GitHub で archive する」は採らない。005 で既存の repo をそのまま使うと決めており、この repo に記事を書き足していくため
   - 残り: Cloudflare Pages の環境変数 `SKIP_DEPENDENCY_INSTALL` は要らなくなったが、残っていても害は無い（外すのはダッシュボードの操作で、ユーザーの確認が要る）。手順 1〜3（dump の保管、GCP と AWS の片付け）は着手の条件どおり 2 週間後
+- 2026-11-27: GitHub の Settings → Danger Zone の「Leave fork network」で、`jiikko/blog` を `lokka/lokka` の fork network から外した（ユーザーの指示。取り消せない操作。sudo mode の認証はユーザーが行った）。`gh api repos/jiikko/blog` は `fork: false`・`parent: null`。repo の id は 14086612 のまま変わらなかった
