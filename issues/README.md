@@ -1,7 +1,7 @@
 # issues/ — dotfiles 固有の issue 運用
 
 **共通規約（命名・type 語彙・状態ディレクトリ・`期限:`・`human`・`retro`・本文の書き方）は
-[`_claude/issue-rules.md`](../_claude/issue-rules.md) が正本**で、issues/ を持つ repo のセッションに
+dotfiles の `_claude/issue-rules.md` が正本**で、issues/ を持つ repo のセッションに
 SessionStart hook（`_claude/hooks/issue-rules-inject.sh`）が注入する（issue 401）。
 ここには dotfiles でだけ効く道具・検査・経緯を書く。共通規約をここへ写さない。
 
@@ -44,7 +44,7 @@ issues/ の外から markdown リンク `[issue 012](../issues/done/012-….md)`
 - glogx の issues viewer（`i` キー）: `human` タブは件数 0 でも All の右に固定で出る。`n` で `next/` の claim を
   付け外しする。viewer は期限を表示しない。`epic/<name>/` は `▸ <name> (N ✓done)` の親行に折り畳まれ、
   group 名と同じ番号の issue だけが親行に統合される。**契約の一次情報は
-  [`docs/issues-viewer-spec.md`](../docs/issues-viewer-spec.md)**
+  dotfiles の `docs/issues-viewer-spec.md`**
 - 🚨 group 内の `waiting/`（`epic/<name>/waiting/`）は viewer 未対応（迷子 `?` になる）。`closed/` のような綴りの揺れも迷子
 - 関わった issue の本文更新漏れは Stop hook `_claude/hooks/issue-progress-check.sh` が差し戻す（開始時 HEAD は
   `issue-progress-start.sh` が記録）。human / retro の催促は `human-tasks-due.sh` / `retro-open.sh`（共通処理は
