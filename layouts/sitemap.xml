@@ -1,4 +1,4 @@
-{{- /* Same shape as Lokka's sitemap (public/lokka/sitemap.builder): the top page with changefreq/priority, then posts newest first. Lokka listed only the latest 10; this lists every post. */ -}}
+{{- /* Same shape as Lokka's sitemap (public/lokka/sitemap.builder, removed in issue 011; see git history): the top page with changefreq/priority, then posts newest first. Lokka listed only the latest 10; this lists every post. */ -}}
 {{ printf "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" | safeHTML }}
 {{ $posts := (where site.RegularPages "Section" "posts").ByDate.Reverse }}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

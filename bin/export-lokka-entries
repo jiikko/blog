@@ -30,7 +30,7 @@ import sys
 
 MYSQL = shutil.which("mysql") or "/opt/homebrew/opt/mysql-client@8.0/bin/mysql"
 
-# Same string as the production feed (public/lokka/index.builder): tag:<host>,<created_at.to_s>.
+# Same string as the production feed (public/lokka/index.builder, removed in issue 011; see git history): tag:<host>,<created_at.to_s>.
 # created_at is stored without a zone and Lokka prints it with +00:00, so keep that text verbatim;
 # changing it makes every post look new in feed readers.
 ATOM_ID_PREFIX = "tag:https://blog.jiikko.com:443,"
