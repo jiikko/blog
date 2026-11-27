@@ -2,7 +2,7 @@
 
 起票日: 2026-10-09
 
-> epic [001](../001-task-migrate-to-git-managed-static-site.md) の本文。2026-10-09 に 001 から移した（glogx の issues viewer では、epic の親行の `Enter` が子リストの開閉になるので、本文は子 issue に置く）。
+> epic [001](001-task-migrate-to-git-managed-static-site.md) の本文。2026-10-09 に 001 から移した（glogx の issues viewer では、epic の親行の `Enter` が子リストの開閉になるので、本文は子 issue に置く）。
 > 状態: **乗り換える方向で進める**（2026-10-09 に決定）。作業は子 issue に分けた:
 > 003 本番 DB の棚卸し（human）/ 004 専用 DB ユーザーへの切り替え / 005 配信先・生成ツール・CMS の選定 / 006 記事の書き出し / 007 テーマの移植 / 008 URL・feed・sitemap / 009 CMS / 010 切り替え / 011 後始末。
 > 下の「決めること」と「移行の手順」は 2026-10-09 時点の下書きで、正本は各子 issue。

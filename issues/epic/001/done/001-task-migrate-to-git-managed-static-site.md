@@ -3,6 +3,6 @@
 起票日: 2026-10-09
 
 Lokka + Cloud Run + Cloud SQL の構成をやめ、記事を repo で持つ静的サイトにし、編集は GitHub 認証の Git ベースの CMS で行う。
-**乗り換える方向で進める**（2026-10-09 に決定）。背景・事実は [002](done/002-design-static-site-migration-plan.md) にあり、作業は 003〜011 の子 issue に分けた。
+**乗り換える方向で進める**（2026-10-09 に決定）。背景・事実は [002](002-design-static-site-migration-plan.md) にあり、作業は 003〜011 の子 issue に分けた。
 
 状態（2026-11-27）: 完了。2026-11-26 に DNS を Cloudflare Pages に切り替え、11-27 に Lokka のコードと GCP の資源（Cloud Run・Artifact Registry・Cloud Build のトリガー・DB `lokka_production`）を消した。CMS は使わない（009 は削除）。旧ブログの dump は `~/backup/blog.jiikko.com/` にある（011）
