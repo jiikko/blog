@@ -34,3 +34,9 @@ Cloud SQL のインスタンス `hoby-db` は**他のサービスと相乗りな
 - 2026-10-09: 起票
 - 2026-10-09: 反証レビュー 2 本（事実の照合 / 計画の抜けと順序）の指摘を、コードと本番で確かめてから反映した
 - 2026-11-26: Cloud Build のトリガー `blog` を無効化した（`gcloud builds triggers import` で `disabled: true`）。無効化の前の 5 回のビルド（2026-10-09〜10-12）はすべて FAILURE で、本番のリビジョン `blog-00022-qgz` は手で push したイメージ `web:master` のまま
+- 2026-11-27: 手順 4 のうち、repo の Lokka のコードを消した（ユーザーの指示「lokka のコードは消していい」。着手の条件の 2 週間を待たずに実行。旧 Cloud Run へ戻すときはデプロイ済みのリビジョンを使うので、コードを消しても戻し方は変わらない）
+  - 「issue 011: Lokka のコードを消す」で 373 ファイルを消した。残したのは Hugo のサイト・issues・`bin/export-lokka-entries`・`bin/check-legacy-urls`・`LICENSE`。テーマ `blog.jiikko.com` は Lokka 同梱の `jarvi` から作られている（画像は同じもの）ので、Lokka の MIT の `LICENSE` は残した
+  - `hugo.toml` の `i18nDir` を外した。消す前と後で `hugo --gc` の出力 350 ファイルを `diff -r` で比べ、差は無かった
+  - Pages のビルドは commit から約 16 秒で成功した（前は Ruby のコンパイルで約 4 分）。`bin/check-legacy-urls https://blog.jiikko.com` は 215 件すべて 200
+  - 書き換え: 手順 4 の「新しいサイトの repo を指す」「GitHub で archive する」は採らない。005 で既存の repo をそのまま使うと決めており、この repo に記事を書き足していくため
+  - 残り: Cloudflare Pages の環境変数 `SKIP_DEPENDENCY_INSTALL` は要らなくなったが、残っていても害は無い（外すのはダッシュボードの操作で、ユーザーの確認が要る）。手順 1〜3（dump の保管、GCP と AWS の片付け）は着手の条件どおり 2 週間後

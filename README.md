@@ -72,7 +72,7 @@ The GitHub Actions workflow in `.github/workflows/hugo.yml` runs this build for 
    ```
 
    - **この repo は public なので、`draft = true` のまま commit しない**（サイトには出ないが、GitHub では誰でも読める）。書きかけの記事は commit しないで手元で持つ
-   - push すると Cloudflare Pages が自動でビルドして公開する。反映まで 4 分ほどかかる。ビルドの結果は Cloudflare のダッシュボードの Workers & Pages → `blog` → Deployments で見られる
+   - push すると Cloudflare Pages が自動でビルドして公開する。反映まで 1 分もかからない。ビルドの結果は Cloudflare のダッシュボードの Workers & Pages → `blog` → Deployments で見られる
 5. 直すときは、本文と `lastmod` を書き換えて同じように commit・push する。`date` と `url` は変えない（`date` を変えると feed で別の記事として扱われることがある）
 
 ## Content format
