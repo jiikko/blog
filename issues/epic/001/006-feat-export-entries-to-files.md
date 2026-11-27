@@ -54,3 +54,7 @@
   - トップの最初の 10 件の並び、カテゴリーのページの題（`/category/4/` が「日記」）、Atom の `<id>` が本番と一致することも確かめた
   - 受け入れ条件の「本文が一致」は上の 15 件を除いて満たした。`/resque` は `dist/resque/index.html` に出る（URL の形は 008）
 - 残り: タグの URL（Hugo が小文字にする）・ページ送り・年別アーカイブ・末尾のスラッシュは 008。Google Analytics の `tracker` は Universal Analytics の ID（`UA-`）で、UA は 2023 年に計測を止めているので移さない
+
+## 決着（2026-11-27）
+
+受け入れ条件: 件数は 173 件で一致。本文は 158 件が一致し、残り 15 件は上の進捗のとおり見て受け入れた。`/resque` は 200（010 の `bin/check-legacy-urls https://blog.jiikko.com` で、旧 URL 215 件すべて 200）。

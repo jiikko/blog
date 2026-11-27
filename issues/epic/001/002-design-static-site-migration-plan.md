@@ -147,3 +147,12 @@
 - 2026-10-09: 乗り換える方向に決まった。子 issue 003〜011 を起票した
 - 2026-10-09: 子 issue 003〜011 を反証レビュー 2 本（事実の照合 / 計画の抜けと順序。sonnet の読み取り専用）に通し、本番とコードで再現した指摘を各 issue に反映した
   - 採らなかった指摘: 「この repo を archive すると本文の GitHub の画像が切れる」。画像は別の repo `jiikko/cdn` にあるので当たらない
+
+## 決着（2026-11-27）
+
+決めることの欄は、子 issue で次のとおり決まった。チェックボックスは書いた時点のまま残す。
+- 配信先: Cloudflare Pages / 生成ツール: Hugo（005）
+- CMS: 使わない（2026-11-27 のユーザー決定。009 は削除した）。記事は README の更新マニュアルと repo の skill `new-post` で書く
+- 記事の持ち方: repo の `content/posts/*.md`（元の Markdown）（006）
+- ページ送り: `/page/N/` にし、旧 `?page=N` は `layouts/baseof.html` の script で送る（008）
+- 画像: `jiikko/cdn` の raw URL（README）。`/search/` とコメント投稿は移さない

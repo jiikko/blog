@@ -41,3 +41,5 @@ Cloud SQL のインスタンス `hoby-db` は**他のサービスと相乗りな
   - 書き換え: 手順 4 の「新しいサイトの repo を指す」「GitHub で archive する」は採らない。005 で既存の repo をそのまま使うと決めており、この repo に記事を書き足していくため
   - 残り: Cloudflare Pages の環境変数 `SKIP_DEPENDENCY_INSTALL` は要らなくなったが、残っていても害は無い（外すのはダッシュボードの操作で、ユーザーの確認が要る）。手順 1〜3（dump の保管、GCP と AWS の片付け）は着手の条件どおり 2 週間後
 - 2026-11-27: GitHub の Settings → Danger Zone の「Leave fork network」で、`jiikko/blog` を `lokka/lokka` の fork network から外した（ユーザーの指示。取り消せない操作。sudo mode の認証はユーザーが行った）。`gh api repos/jiikko/blog` は `fork: false`・`parent: null`。repo の id は 14086612 のまま変わらなかった
+
+- 2026-11-27: DB ユーザー `koji` のパスワードは変えない（ユーザー決定「db は削除するのでやらない」）。手順 2 の最後の項はこれで決着。CMS は使わないと決め、009 は削除した

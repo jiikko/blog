@@ -87,3 +87,9 @@ SELECT (SELECT COUNT(*) FROM snippets) snippets, (SELECT COUNT(*) FROM field_nam
   - 6: `amazonaws.com` を含む記事は 1 件
   - 7: snippets 1 / field_names 0 / fields 0 / comments 2 / users 1 / sites 1
 - **残り**: 手順 1（`SHOW GRANTS`）はまだ。dump は `lokka_production` だけなので、`koji` が他の DB に届くかは分からない（004 の要否が決まらない）。本番に SELECT 1 本を流す許可が要る
+
+## 決着（2026-11-27）
+
+閉じる。棚卸しの目的（006 の書き出しの形を決める・004 の要否を決める）はなくなった。
+- 書き出しは 2026-11-26 に本番の dump から済ませた（006）
+- 手順 1 の `SHOW GRANTS` は流さない。`koji` が他の DB に届くかを知る目的は 004 と、011 の `koji` のパスワード変更のためだったが、どちらも行わない（2026-11-27 のユーザー決定「db は削除するのでやらない」）

@@ -56,7 +56,7 @@ Claude Code には「記事を書いて」と頼めばよい。この repo の s
    | 6 | 開発環境 | | |
 
    - 新しいカテゴリーを作るときは、`content/category/<新しい番号>/_index.md` に `title` を書く
-   - 画像はこの repo に入れない。別の repo `jiikko/cdn` の `images/blog/YYYY/MM/DD/` に push し、本文には `https://raw.githubusercontent.com/jiikko/cdn/master/images/blog/YYYY/MM/DD/<ファイル名>` を貼る（issue 009）
+   - 画像はこの repo に入れない。別の repo `jiikko/cdn` の `images/blog/YYYY/MM/DD/` に push し、本文には `https://raw.githubusercontent.com/jiikko/cdn/master/images/blog/YYYY/MM/DD/<ファイル名>` を貼る
    - コードブロックは色付けしない（旧ブログに合わせている）。生の HTML（埋め込みなど）も書ける
 3. 手元で見た目を確かめる
 

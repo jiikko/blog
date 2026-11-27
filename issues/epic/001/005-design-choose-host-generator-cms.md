@@ -44,3 +44,9 @@ Astro / Jekyll を選ばない理由: どちらも Node か Ruby のツールチ
   - `SKIP_DEPENDENCY_INSTALL=1` で `bundle install` は止まり、2 回目は成功した（f3be148、ビルド 3m57s）。**Ruby のコンパイルは止まらず、毎回約 4 分かかる**。Lokka のファイルを消す 011 まで続く
   - `SKIP_DEPENDENCY_INSTALL` は Production の環境にだけ入れた。PR のプレビュー（Preview の環境）では入っていないので、PR を作るとプレビューのビルドは同じく失敗する見込み（未確認）
   - GitHub App「Cloudflare Workers and Pages」は、Cloudflare の repo 一覧に `blog` 以外も出たので、All repositories で入った可能性が高い（API では確かめられなかった）。`jiikko/blog` だけに絞るのはユーザーの作業
+
+## 決着（2026-11-27）
+
+- CMS と認証方法: CMS は使わない（2026-11-27 のユーザー決定。009 は削除した）。記事は README の更新マニュアルと repo の skill `new-post` で書く
+- 新しい記事の URL の形: `/<slug>`（ファイル名 = URL）。衝突しない名前の規則は README の更新マニュアルにあり、skill `new-post` が書く前に検査する（ビルドでの検査は置いていない）
+- Preview の環境で `SKIP_DEPENDENCY_INSTALL` が無い件は、011 で Lokka の `.ruby-version` と `Gemfile` を消したので起きなくなった

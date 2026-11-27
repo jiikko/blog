@@ -54,3 +54,7 @@ DNS は Route 53 のまま（サブドメインなので、ネームサーバー
   - **戻すときは DNS の前に開け直す**: `gcloud run services add-iam-policy-binding blog --region asia-northeast1 --member=allUsers --role=roles/run.invoker`（ドメインマッピング経由のアクセスも同じ権限が要る）
   - 残り: 手順 8（Search Console。人の作業）
 - 2026-11-27: 手順 8 は行わない（ユーザーの判断「送らなくてもクロールしてくれる」）。記事と `/sitemap.xml` の URL は旧ブログと同じなので、Google は登録済みの URL を取り直す。`/robots.txt` は Cloudflare が出すコメントだけのもので、Disallow も Sitemap の行も無い（2026-11-27 に curl で確認）。手順はこれで全部済んだ
+
+## 決着（2026-11-27）
+
+手順はすべて済んだ（8 は行わないと決めた）。戻し方は上の進捗の 2026-11-26 と 2026-11-27 の項にある。
